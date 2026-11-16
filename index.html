@@ -378,7 +378,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     <div>
       <span class="eyebrow">● Independent · No sign-up</span>
       <h1>Find the credit card that actually <em>pays you back.</em></h1>
-      <p class="lede">Tell us how you spend in a typical month. We run your numbers through <span class="ncards">25</span> popular Indian credit cards and rank them by how much they'd really put back in your pocket every year, after fees.</p>
+      <p class="lede">Tell us how you spend in a typical month. We run your numbers through <span class="ncards">70</span> Indian credit cards from 16 issuers and rank them by how much they'd really put back in your pocket every year, after fees.</p>
       <div class="hero-cta">
         <button class="btn btn-primary" onclick="startQuiz()">Find my best card →</button>
         <button class="btn btn-ghost" onclick="document.getElementById('how').scrollIntoView()">See how we score</button>
@@ -449,7 +449,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 </div></main>
 
 <!-- LOADING -->
-<main id="v-load" class="view"><div class="loading"><div><div class="spinner-cards"><i></i><i></i><i></i></div><h2 style="font-size:28px;margin-bottom:8px">Running your numbers</h2><p id="loadMsg">Checking <span class="ncards">25</span> cards against your spends…</p></div></div></main>
+<main id="v-load" class="view"><div class="loading"><div><div class="spinner-cards"><i></i><i></i><i></i></div><h2 style="font-size:28px;margin-bottom:8px">Running your numbers</h2><p id="loadMsg">Checking <span class="ncards">70</span> cards against your spends…</p></div></div></main>
 
 <!-- RESULTS -->
 <main id="v-res" class="view"><div class="wrap" id="resWrap"></div></main>
@@ -610,6 +610,87 @@ const CARDS = [
   g:'linear-gradient(135deg,#7A1530,#B2283F)'}
 ];
 
+
+/* ---------- Extended catalogue (all major Indian issuers) ---------- */
+const BG={hdfc:'linear-gradient(135deg,#0B2A5B,#1D4E9E)',sbi:'linear-gradient(135deg,#123E63,#2A7AB0)',icici:'linear-gradient(135deg,#5A1A10,#B5471F)',axis:'linear-gradient(135deg,#5E0B2E,#97144D)',kotak:'linear-gradient(135deg,#00224F,#ED1C24)',idfc:'linear-gradient(135deg,#6E1027,#9C1F3A)',indus:'linear-gradient(135deg,#3B1F14,#8A4B2B)',yes:'linear-gradient(135deg,#0A2E6E,#1B66C9)',au:'linear-gradient(135deg,#3D1366,#F37021)',rbl:'linear-gradient(135deg,#1B2B5A,#2F4C9C)',hsbc:'linear-gradient(135deg,#4A0A12,#DB0011)',sc:'linear-gradient(135deg,#0A5132,#1E7FCB)',amex:'linear-gradient(135deg,#0B3B6E,#2E77BC)',bob:'linear-gradient(135deg,#7A2A0C,#F15A22)',one:'linear-gradient(135deg,#111,#3A3A3A)',fed:'linear-gradient(135deg,#0D2A4F,#E2A300)'};
+function K(id,name,bank,net,type,join,fee,waiver,minInc,minScore,base,ov,caps,forex,lounge,feats,g){
+  const rates={}; CATS.forEach(c=>rates[c.k]=base); rates.fuel=1; Object.assign(rates,ov||{});
+  return {id,name,bank,net,type,join,fee,waiver,minInc,minScore,rates,caps:caps||[],forex,lounge,feats,g};
+}
+CARDS.push(
+ // HDFC
+ K('hdfc-dcb','Diners Club Black Metal','HDFC Bank','DINERS','Points',10000,10000,800000,175000,3,3.33,{travel:10},[{cats:['travel'],m:7500}],2,99,['3.33% base reward rate, 5X–10X via SmartBuy','Unlimited lounge access worldwide','Complimentary club memberships on ₹4L quarterly spend','Diners network: some merchants may not accept it'],BG.hdfc),
+ K('hdfc-moneyback-plus','MoneyBack+','HDFC Bank','VISA','Points',500,500,50000,20000,1,.33,{amazon:3.33,flipkart:3.33,food:3.33,grocery:3.33},[{cats:['amazon','flipkart','food','grocery'],m:625}],3.5,0,['10X points on Amazon, Flipkart, BigBasket, Swiggy, Reliance Smart','₹500 voucher on ₹50,000 quarterly spend','Fee waived at ₹50,000 a year','Low base rate on other spends'],BG.hdfc),
+ K('hdfc-pixel-play','Pixel Play','HDFC Bank','RUPAY','Cashback',500,500,100000,25000,1,1,{food:5,dining:5,amazon:3,flipkart:3},[{cats:['food','dining'],m:500},{cats:['amazon','flipkart'],m:500}],3.5,0,['Pick 2 categories for 5% cashback','Pick 1 e-commerce merchant for 3%','1% on everything else','Fully digital card managed in PayZapp'],BG.hdfc),
+ K('hdfc-freedom','Freedom','HDFC Bank','VISA','Points',500,500,50000,12000,0,.17,{food:1.67,grocery:1.67,dining:1.67,travel:1.67},[{cats:['food','grocery','dining','travel'],m:500}],3.5,0,['10X points on BigBasket, BookMyShow, OYO, Swiggy, Uber','Good first card with low income requirement','Fee waived at ₹50,000 a year','Very low base rate'],BG.hdfc),
+ K('tata-neu-plus','Tata Neu Plus','HDFC Bank','RUPAY','Points',499,499,100000,25000,1,1,{grocery:2},[],3.5,4,['2% NeuCoins on Tata brands','1% on all other spends incl. UPI on RuPay','4 domestic lounge visits a year','Fee waived at ₹1L a year'],'linear-gradient(135deg,#3A2A7A,#7B61D1)'),
+ // SBI
+ K('sbi-simplyclick','SimplyCLICK','SBI Card','VISA','Points',499,499,100000,20000,1,1.25,{amazon:2.5,travel:2.5,flipkart:2.5,offline:.25,grocery:.25,dining:.25,bills:.25},[],3.5,0,['10X points on Amazon, Myntra, Cleartrip, BookMyShow, Netmeds','5X on other online spends','₹2,000 e-vouchers at ₹1L and ₹2L yearly online spend','Weak on offline spends'],BG.sbi),
+ K('sbi-simplysave','SimplySAVE','SBI Card','VISA','Points',499,499,100000,20000,1,.25,{grocery:2.5,dining:2.5},[],3.5,0,['10X points on dining, movies, groceries and departmental stores','1 point per ₹150 elsewhere','Fee waived at ₹1L a year','Simple everyday card'],BG.sbi),
+ K('sbi-prime','PRIME','SBI Card','VISA','Points',2999,2999,300000,50000,2,.5,{grocery:2.5,dining:2.5,offline:1},[],3.5,8,['10 points per ₹100 on dining, groceries, departmental stores, movies','₹7,000 worth of vouchers on milestones','8 domestic + 4 international lounge visits','Fee waived at ₹3L a year'],BG.sbi),
+ K('sbi-elite','ELITE','SBI Card','VISA','Points',4999,4999,1000000,80000,3,.5,{grocery:1.25,dining:1.25,offline:1.25},[],1.99,8,['5X points on dining, departmental stores and groceries','Free movie tickets worth ₹6,000 a year','1.99% forex markup','Lounge access in India and abroad'],'linear-gradient(135deg,#1A1A1A,#5A4A2A)'),
+ K('sbi-pulse','PULSE','SBI Card','VISA','Points',1499,1499,200000,30000,2,.5,{dining:1.25,offline:1.25},[],3.5,8,['5X points at chemists, pharmacies, dining and movies','Noise smartwatch as welcome gift','Netmeds and FitPass Pro memberships','8 domestic lounge visits a year'],BG.sbi),
+ K('sbi-irctc','IRCTC RuPay','SBI Card','RUPAY','Points',500,300,0,15000,1,.25,{travel:3.33},[],3.5,4,['Up to 10% value back on AC train tickets via IRCTC','1% transaction fee waiver on IRCTC','Railway lounge access','Low rewards elsewhere'],'linear-gradient(135deg,#0C3B7A,#E84B1A)'),
+ // ICICI
+ K('icici-sapphiro','Sapphiro','ICICI Bank','VISA','Points',6500,3500,600000,100000,3,.5,{intl:1},[],3.5,8,['4 points per ₹100 on international spends, 2 on domestic','Welcome vouchers worth ₹9,000+','Domestic and international lounge access','Golf and movie offers'],BG.icici),
+ K('icici-rubyx','Rubyx','ICICI Bank','MASTERCARD','Points',3000,2000,300000,50000,2,.5,{intl:1},[],3.5,8,['2 points per ₹100 on domestic, 4 on international','Buy-one-get-one movie tickets','Domestic lounge access','Golf rounds'],BG.icici),
+ K('icici-coral','Coral','ICICI Bank','VISA','Points',500,500,150000,25000,1,.5,{dining:1},[],3.5,4,['2 points per ₹100 spent','Movie ticket discounts on BookMyShow and INOX','Domestic lounge access (spend-based)','Entry-level ICICI card'],BG.icici),
+ K('icici-emeralde','Emeralde Private Metal','ICICI Bank','VISA','Points',12499,12499,1000000,300000,3,3,{travel:9},[{cats:['travel'],m:6000}],2,99,['6 points per ₹200 (≈3%) on most spends','Up to 6X on travel via iShop','Unlimited lounge and golf','Low 2% forex markup'],'linear-gradient(135deg,#032A22,#0E6B57)'),
+ K('mmt-icici','MakeMyTrip Signature','ICICI Bank','MASTERCARD','Points',2500,2500,0,40000,2,1.25,{travel:4.5},[],0.99,8,['6% on MakeMyTrip hotels, 3% on flights','1.25% on other spends','0.99% forex markup','MMTBLACK membership'],'linear-gradient(135deg,#7A1A1A,#E2382A)'),
+ K('icici-hpcl','HPCL Super Saver','ICICI Bank','VISA','Points',500,500,150000,20000,1,.5,{fuel:6.5,bills:5,grocery:5},[{cats:['fuel'],m:200},{cats:['bills','grocery'],m:400}],3.5,4,['5% cashback + 1.5% surcharge waiver at HPCL pumps','5% on utility bills, groceries and departmental stores','4 domestic lounge visits','Rewards capped monthly'],'linear-gradient(135deg,#0A2A5E,#D7261E)'),
+ K('icici-platinum','Platinum Chip','ICICI Bank','VISA','Points',0,0,0,15000,0,.5,{},[],3.5,0,['Lifetime free','2 points per ₹100 on retail spends','1% fuel surcharge waiver','Easy approval for ICICI customers'],BG.icici),
+ // Axis
+ K('axis-select','SELECT','Axis Bank','VISA','Points',3000,3000,800000,100000,3,1,{grocery:5},[{cats:['grocery'],m:500}],3.5,12,['10 EDGE points per ₹200, 2X on retail shopping','₹500 off on BigBasket and Swiggy monthly','12 domestic + 6 international lounge visits','Golf rounds'],BG.axis),
+ K('axis-privilege','Privilege','Axis Bank','VISA','Points',1500,1500,250000,50000,2,1,{},[],3.5,0,['10 EDGE points per ₹200','Bonus points on ₹2.5L yearly spend','Welcome Yatra voucher','Simple flat-rate rewards'],BG.axis),
+ K('axis-horizon','Horizon','Axis Bank','VISA','Miles',3000,3000,300000,100000,3,2,{travel:5,fuel:0,bills:0},[],3.5,8,['5 EDGE Miles per ₹100 on travel via Travel EDGE and airline sites','2 EDGE Miles per ₹100 elsewhere','Domestic and international lounge access','Miles transfer to airline partners'],'linear-gradient(135deg,#0D2B3E,#3A7CA5)'),
+ K('axis-neo','Neo','Axis Bank','RUPAY','Cashback',250,250,0,15000,1,.2,{food:10,bills:5},[{cats:['food'],m:240},{cats:['bills'],m:150}],3.5,0,['40% off on Zomato twice a month (up to ₹120)','5% off bills via Paytm','10% off on Myntra','Low base rewards'],BG.axis),
+ // Kotak
+ K('kotak-indianoil','IndianOil Kotak','Kotak Mahindra Bank','RUPAY','Points',449,449,50000,15000,1,.5,{fuel:4,dining:1,grocery:1},[{cats:['fuel'],m:300}],3.5,0,['4% value back at IndianOil pumps','1% on dining and groceries','Fee waived at ₹50,000 a year','Fuel surcharge waiver'],BG.kotak),
+ K('kotak-royale','Royale Signature','Kotak Mahindra Bank','VISA','Points',999,999,100000,40000,2,.33,{dining:.67,travel:.67,intl:.67},[],3.5,8,['4 points per ₹150 on dining, travel and international','Railway and airport lounge access','Bonus points on ₹4L and ₹8L yearly spend','Low forex-free alternatives exist'],BG.kotak),
+ // IDFC FIRST
+ K('idfc-wealth','FIRST Wealth','IDFC FIRST Bank','VISA','Points',0,0,0,250000,3,1.5,{bills:.5},[],1.5,12,['Lifetime free premium card','10X points on spends above ₹20,000 a month','1.5% forex markup','Domestic and international lounge access'],BG.idfc),
+ K('idfc-select','FIRST Select','IDFC FIRST Bank','VISA','Points',0,0,0,100000,2,1.25,{bills:.5},[],1.99,8,['Lifetime free','10X points on spends above ₹20,000 a month','1.99% forex markup','4 domestic lounge visits per quarter'],BG.idfc),
+ K('idfc-power-plus','FIRST Power+','IDFC FIRST Bank','RUPAY','Cashback',499,499,150000,20000,1,.5,{fuel:6.5,bills:5,grocery:5},[{cats:['fuel'],m:400},{cats:['bills','grocery'],m:200}],3.5,0,['Up to 6.5% savings at HPCL pumps','5% on groceries and utility bills','Fuel surcharge waiver','RuPay: UPI payments supported'],'linear-gradient(135deg,#0A2A5E,#9C1F3A)'),
+ // IndusInd
+ K('indusind-eazydiner','EazyDiner Platinum','IndusInd Bank','MASTERCARD','Points',1999,1999,0,30000,2,.5,{dining:10,food:2},[{cats:['dining'],m:750}],3.5,0,['25% off at partner restaurants via EazyDiner PayEazy','EazyDiner Prime membership','2X points on dining and shopping','Weak outside dining'],BG.indus),
+ K('indusind-legend','Legend','IndusInd Bank','VISA','Points',9999,0,0,100000,3,1,{},[],1.8,8,['1 point per ₹100 on weekdays, 2 on weekends','1.8% forex markup','Lounge access and golf','Lifetime free variants on offer'],'linear-gradient(135deg,#1E1E1E,#7A5C2E)'),
+ K('indusind-tiger','Tiger','IndusInd Bank','VISA','Points',0,0,0,30000,1,1,{},[],1.5,8,['Lifetime free','Up to 1.5% value back, higher above ₹1L monthly','1.5% forex markup','Lounge access'],'linear-gradient(135deg,#3B2A10,#E39B2A)'),
+ // Yes Bank
+ K('yes-marquee','Marquee','Yes Bank','VISA','Points',9999,4999,1000000,200000,3,2.25,{amazon:4.5,flipkart:4.5,online:4.5,food:4.5,travel:4.5,bills:0},[],1,99,['36 points per ₹200 online (≈4.5%), 18 offline','1% forex markup','Unlimited lounge access','Points redeem for flights and vouchers'],'linear-gradient(135deg,#0B0B0B,#2E4A7A)'),
+ K('yes-reserv','Reserv','Yes Bank','MASTERCARD','Points',2499,2499,300000,75000,2,1.5,{amazon:3,flipkart:3,online:3,food:3,travel:3,bills:0},[],1.75,8,['24 points per ₹200 online, 12 offline','1.75% forex markup','Domestic and international lounge access','Bonus points on milestones'],BG.yes),
+ K('yes-paisasave','PaisaSave','Yes Bank','VISA','Cashback',499,499,120000,20000,1,1.5,{amazon:3,flipkart:3,online:3,food:3,travel:3,bills:0},[{cats:['amazon','flipkart','online','food','travel'],m:1250}],3.5,0,['3% on online spends (capped)','1.5% unlimited on offline spends','Fee waived at ₹1.2L a year','Simple cashback card'],BG.yes),
+ // AU
+ K('au-altura-plus','Altura Plus','AU Small Finance Bank','VISA','Cashback',499,499,80000,15000,1,.5,{offline:1.5,grocery:1.5},[{cats:['offline','grocery'],m:100}],3.5,4,['1.5% cashback on in-store spends (capped)','2 points per ₹100 online','4 railway lounge visits a year','Fee waived at ₹80,000 a year'],BG.au),
+ K('au-zenith-plus','Zenith+','AU Small Finance Bank','VISA','Points',4999,4999,1000000,150000,3,1,{dining:2,travel:2,intl:2},[],.99,16,['2X points on dining, travel and international','0.99% forex markup','16 domestic + 16 international lounge visits','Metal card with luxury benefits'],'linear-gradient(135deg,#1A1A1A,#8A6A3A)'),
+ K('au-lit','LIT','AU Small Finance Bank','VISA','Cashback',0,0,0,15000,1,.5,{amazon:5,flipkart:5,online:5},[{cats:['amazon','flipkart','online'],m:1000}],3.5,0,['Lifetime free; pay only for features you switch on','5% cashback on online spends when the feature is active','Build-your-own benefits','Cost of features not counted here'],BG.au),
+ // RBL
+ K('rbl-shoprite','ShopRite','RBL Bank','VISA','Points',500,500,150000,20000,1,.25,{grocery:5},[{cats:['grocery'],m:100}],3.5,0,['5% off on grocery spends (capped)','1 point per ₹100 elsewhere','Movie ticket discount','Fuel surcharge waiver'],BG.rbl),
+ K('rbl-world-safari','World Safari','RBL Bank','MASTERCARD','Points',3000,3000,0,50000,2,.5,{travel:2.5,intl:1.25},[],0,8,['Zero forex markup','5X points on travel spends','Domestic and international lounge access','Travel insurance cover'],'linear-gradient(135deg,#0A3A3A,#2E8A7A)'),
+ // HSBC
+ K('hsbc-travelone','TravelOne','HSBC','MASTERCARD','Miles',4999,4999,800000,100000,3,1,{travel:2,intl:2},[],3.5,10,['4 points per ₹100 on flights, hotels and foreign spends','Points transfer 1:1 to airline and hotel partners','Domestic and international lounge access','Milestone bonuses'],BG.hsbc),
+ K('hsbc-platinum','Visa Platinum','HSBC','VISA','Points',0,0,0,33000,2,.5,{},[],3.5,0,['Lifetime free','2 points per ₹150, 5X once you cross ₹4L a year','Dining offers','Basic everyday card'],BG.hsbc),
+ // Standard Chartered
+ K('sc-smart','Smart','Standard Chartered','VISA','Cashback',499,499,120000,25000,1,1,{amazon:2,flipkart:2,online:2,food:2,travel:2},[{cats:['amazon','flipkart','online','food','travel'],m:1000}],3.5,0,['2% cashback on online spends (₹1,000/month cap)','1% on offline spends','Fee waived at ₹1.2L a year','Low-cost cashback card'],BG.sc),
+ K('sc-ultimate','Ultimate','Standard Chartered','VISA','Points',5000,5000,0,150000,3,3.33,{fuel:0},[],2,4,['5 points per ₹150 (≈3.3%) on most spends','5% cashback on duty-free spends','2% forex markup','Golf and lounge access'],'linear-gradient(135deg,#0A0A0A,#0A5132)'),
+ // American Express
+ K('amex-mrcc','Membership Rewards','American Express','AMEX','Points',1000,4500,0,50000,3,1,{fuel:0,bills:.5},[],3.5,0,['1 point per ₹50 + 1,000 bonus points on 4 spends of ₹1,500 a month','Points redeem for vouchers and airline miles','Renewal fee often discounted on request','AmEx not accepted everywhere'],BG.amex),
+ K('amex-plat-travel','Platinum Travel','American Express','AMEX','Points',3500,5000,0,50000,3,1,{fuel:0,bills:.5},[],3.5,8,['40,000 bonus points (≈Taj voucher) at ₹4L yearly spend','1 point per ₹50 base','8 domestic lounge visits a year','Milestone value not counted in this estimate'],'linear-gradient(135deg,#8C8C8C,#4A4A52)'),
+ K('amex-smartearn','SmartEarn','American Express','AMEX','Points',495,495,40000,40000,3,.5,{flipkart:5,food:5,travel:5,amazon:2.5},[],3.5,0,['10X points on Flipkart, Uber, Swiggy, Zomato','5X on Amazon','₹500 voucher on ₹1.2L yearly spend','Fee waived at ₹40,000 a year'],BG.amex),
+ // Bank of Baroda
+ K('bob-eterna','Eterna','BOBCARD','VISA','Points',2499,2499,500000,75000,2,.5,{online:3.75,amazon:3.75,flipkart:3.75,dining:3.75,travel:3.75,food:3.75},[{cats:['online','amazon','flipkart','dining','travel','food'],m:1250}],2,8,['15 points per ₹100 on dining, travel and online shopping','Fitness and lounge benefits','2% forex markup','Fee waived at ₹5L a year'],BG.bob),
+ K('bob-easy','Easy','BOBCARD','RUPAY','Points',0,0,0,15000,0,.25,{grocery:1.25,dining:1.25,offline:.5},[],3.5,0,['Lifetime free','5X points on groceries, movies and departmental stores','RuPay: UPI payments supported','Good starter card'],BG.bob),
+ // OneCard
+ K('onecard','OneCard','OneCard (multiple banks)','VISA','Points',0,0,0,15000,1,.2,{amazon:1,online:1,food:1},[],1,0,['Lifetime free metal card','5X points on your top 2 spend categories each month','1% forex markup','Points convert to cash at ₹0.10 each'],BG.one),
+ // Federal
+ K('federal-celesta','Celesta','Federal Bank','VISA','Points',3000,3000,250000,100000,2,1,{},[],2.5,8,['Points on every spend with milestone bonuses','Domestic and international lounge access','2.5% forex markup','Premium entry card from Federal Bank'],BG.fed)
+);
+
+/* ---------- Custom cards (user-defined, used in the maximizer) ---------- */
+let CUSTOM=(()=>{try{return JSON.parse(localStorage.getItem('bcf-custom'))||[]}catch(e){return []}})();
+CUSTOM.forEach(c=>CARDS.push(c));
+const saveCustom=()=>{try{localStorage.setItem('bcf-custom',JSON.stringify(CUSTOM))}catch(e){}};
+const MARKET=()=>CARDS.filter(c=>!c.custom);
+
 const PRESETS = {
   'Balanced':   {amazon:3000,flipkart:2000,online:2000,food:3000,grocery:6000,dining:3000,fuel:4000,travel:2000,bills:3500,intl:0,offline:6000},
   'Online shopper':{amazon:8000,flipkart:6000,online:5000,food:3000,grocery:4000,dining:2000,fuel:2000,travel:1000,bills:3000,intl:0,offline:3000},
@@ -645,6 +726,7 @@ function cardFace(c){
 }
 
 /* ---------- Home ---------- */
+document.querySelectorAll('.ncards').forEach(e=>e.textContent=MARKET().length);
 (function initHome(){
   const pick=['scapia-federal','sbi-cashback','hdfc-regalia-gold'].map(id=>CARDS.find(c=>c.id===id));
   document.getElementById('heroStack').innerHTML = pick.map(cardFace).join('') + `<div class="tag">Avg. difference between<br>best and 5th-best card<b>₹9,400/yr</b></div>`;
@@ -773,7 +855,7 @@ function whyLines(r){
 /* ---------- Results ---------- */
 function runResults(){
   go('load');
-  const msgs=[`Checking ${CARDS.length} cards against your spends…`,'Applying monthly caps and fee waivers…','Counting lounge visits and forex costs…'];
+  const msgs=[`Checking ${MARKET().length} cards against your spends…`,'Applying monthly caps and fee waivers…','Counting lounge visits and forex costs…'];
   let i=0; const iv=setInterval(()=>{i++; if(i<msgs.length) document.getElementById('loadMsg').textContent=msgs[i]},550);
   filt={feeMax:S.feeMax, type:S.reward==='any'?'all':S.reward, bank:'all'};
   setTimeout(()=>{clearInterval(iv); renderResults(); go('res')},1700);
@@ -785,14 +867,14 @@ function passFilt(r){
   return true;
 }
 function renderResults(){
-  const all = CARDS.map(score).sort((a,b)=>b.net-a.net);
+  const all = MARKET().map(score).sort((a,b)=>b.net-a.net);
   const shown = all.filter(passFilt);
   const elig = shown.filter(r=>r.eligible), stretch = shown.filter(r=>!r.eligible);
   const best = elig[0];
   const scoreLbl=['Below 650','650–699','700–749','750+'][S.score];
   const w=document.getElementById('resWrap');
   const catBest = CATS.filter(c=>(S.spends[c.k]||0)>0).map(c=>{
-    const b=[...CARDS].filter(x=>passFilt({c:x})).sort((a,b)=>(b.rates[c.k]||0)-(a.rates[c.k]||0))[0]; return b?{c,b}:null}).filter(Boolean);
+    const b=MARKET().filter(x=>passFilt({c:x})).sort((a,b)=>(b.rates[c.k]||0)-(a.rates[c.k]||0))[0]; return b?{c,b}:null}).filter(Boolean);
 
   w.innerHTML = `
   <div class="res-head fade-in"><div>
@@ -807,7 +889,7 @@ function renderResults(){
     <span class="sep"></span><span class="lbl">Rewards</span>
     ${[['all','All'],['Cashback','Cashback'],['Points','Points'],['Miles','Miles']].map(([v,l])=>`<button class="chip ${filt.type===v?'sel':''}" onclick="setFilt('type','${v}')">${l}</button>`).join('')}
     <span class="sep"></span><span class="lbl">Bank</span>
-    ${['all',...new Set(CARDS.map(c=>c.bank))].map(v=>`<button class="chip ${filt.bank===v?'sel':''}" onclick="setFilt('bank','${v}')">${v==='all'?'All banks':v.replace(' Mahindra Bank','').replace(' Bank','')}</button>`).join('')}
+    ${['all',...new Set(MARKET().map(c=>c.bank))].map(v=>`<button class="chip ${filt.bank===v?'sel':''}" onclick="setFilt('bank','${v}')">${v==='all'?'All banks':v.replace(' Mahindra Bank','').replace(' Bank','')}</button>`).join('')}
   </div>
 
   ${best?topBlock(best):`<div class="empty">No cards match these filters at your income and credit score. Try relaxing the fee filter.</div>`}
@@ -937,6 +1019,7 @@ const MERCHANTS=[
  {n:'International / abroad',c:'intl'}
 ];
 let W = (()=>{try{return JSON.parse(localStorage.getItem('bcf-wallet'))||[]}catch(e){return []}})();
+W=W.filter(id=>CARDS.some(c=>c.id===id));
 let MX = {tab:W.length?'swipe':'wallet', merch:0, amt:2000, q:''};
 const saveW=()=>{try{localStorage.setItem('bcf-wallet',JSON.stringify(W))}catch(e){}};
 const card=id=>CARDS.find(c=>c.id===id);
@@ -961,18 +1044,42 @@ function renderMax(){
 
 function renderWallet(b){
   const q=MX.q.toLowerCase();
-  const banks=[...new Set(CARDS.map(c=>c.bank))];
-  b.innerHTML=`<div class="panel fade-in"><h2>Which cards do you hold?</h2><p class="sub">Tap to add or remove. Your wallet stays on this device.</p>
+  const ORDER=['HDFC Bank','SBI Card','ICICI Bank','Axis Bank','Kotak Mahindra Bank','IDFC FIRST Bank','IndusInd Bank','Yes Bank','American Express','HSBC','Standard Chartered','AU Small Finance Bank','RBL Bank','BOBCARD','Federal Bank','OneCard (multiple banks)'];
+  const banks=[...new Set(CARDS.map(c=>c.bank))].sort((a,b)=>(ORDER.indexOf(a)+1||99)-(ORDER.indexOf(b)+1||99));
+  b.innerHTML=`<div class="panel fade-in"><h2>Which cards do you hold?</h2><p class="sub">${MARKET().length} cards from ${new Set(MARKET().map(c=>c.bank)).size} issuers. Tap to add or remove. Your wallet stays on this device. Card not listed? <a href="#" onclick="event.preventDefault();customForm()" style="font-weight:600;color:var(--green)">Add a custom card</a>.</p>
+   ${W.length?`<div class="tags" style="margin:-6px 0 16px">${W.map(id=>`<span class="g">${card(id).name} <button onclick="toggleW('${id}')" style="margin-left:4px">×</button></span>`).join('')}</div>`:''}
    <div class="wallet-search"><input id="wq" placeholder="Search cards or banks…" value="${MX.q}"><button class="btn btn-primary btn-sm" ${W.length?'':'disabled'} onclick="setTab('swipe')">Done · ${W.length} card${W.length===1?'':'s'} →</button></div>
-   <div id="wgroups">${banks.map(bk=>{const cs=CARDS.filter(c=>c.bank===bk&&(!q||(c.name+' '+c.bank).toLowerCase().includes(q)));return cs.length?`<div class="bank-group"><h4>${bk}</h4><div class="wcards">${cs.map(c=>`<button class="wcard ${W.includes(c.id)?'sel':''}" onclick="toggleW('${c.id}')"><span class="sw" style="background:${c.g}"></span><span><b>${c.name}</b><small>${c.type} · ${c.fee?inr(c.fee)+'/yr':'Lifetime free'}</small></span></button>`).join('')}</div></div>`:''}).join('')}</div></div>`;
+   <div id="wgroups">${banks.map(bk=>{const cs=CARDS.filter(c=>c.bank===bk&&(!q||(c.name+' '+c.bank).toLowerCase().includes(q)));return cs.length?`<div class="bank-group"><h4>${bk} · ${cs.length}</h4><div class="wcards">${cs.map(c=>`<button class="wcard ${W.includes(c.id)?'sel':''}" onclick="toggleW('${c.id}')"><span class="sw" style="background:${c.g}"></span><span><b>${c.name}</b><small>${c.custom?'Custom card':c.type+' · '+(c.fee?inr(c.fee)+'/yr':'Lifetime free')}</small></span></button>`).join('')}</div></div>`:''}).join('')}</div></div>`;
   const wq=document.getElementById('wq'); wq.addEventListener('input',()=>{MX.q=wq.value;renderWallet(b);const n=document.getElementById('wq');n.focus();n.setSelectionRange(n.value.length,n.value.length)});
 }
+
+function customForm(){
+  document.getElementById('modalBody').innerHTML=`<h2>Add a custom card</h2><p class="sub" style="color:var(--muted);margin-bottom:18px">For cards we don't list yet. Enter the value you get back per ₹100 spent (for example 1.5 for 1.5%). Leave a category blank to use the base rate.</p>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+     <label class="field" style="margin:0"><span class="lbl" style="font-size:14px;margin-bottom:6px;display:block">Card name</span><div class="money" style="max-width:none"><input id="cfn" placeholder="e.g. Canara RuPay Select"></div></label>
+     <label class="field" style="margin:0"><span class="lbl" style="font-size:14px;margin-bottom:6px;display:block">Bank</span><div class="money" style="max-width:none"><input id="cfb" placeholder="e.g. Canara Bank"></div></label>
+     <label class="field" style="margin:0"><span class="lbl" style="font-size:14px;margin-bottom:6px;display:block">Base reward %</span><div class="money" style="max-width:none"><input id="cfr" inputmode="decimal" value="1"><span>%</span></div></label>
+     <label class="field" style="margin:0"><span class="lbl" style="font-size:14px;margin-bottom:6px;display:block">Forex markup %</span><div class="money" style="max-width:none"><input id="cff" inputmode="decimal" value="3.5"><span>%</span></div></label>
+   </div>
+   <div class="mini-spends">${CATS.map(k=>`<label class="ms"><span>${k.ic} ${k.nm}</span><span class="sp-val" style="width:90px"><input data-k="${k.k}" inputmode="decimal" placeholder="base"><span>%</span></span></label>`).join('')}</div>
+   <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveCustomCard()">Add to my wallet</button></div>`;
+  document.getElementById('modal').classList.add('on');
+}
+function saveCustomCard(){
+  const v=id=>document.getElementById(id).value.trim();
+  const name=v('cfn')||'My card', bank=v('cfb')||'Custom', base=parseFloat(v('cfr'))||0, fx=parseFloat(v('cff'));
+  const rates={}; CATS.forEach(k=>rates[k.k]=base);
+  document.querySelectorAll('#modalBody .mini-spends input').forEach(i=>{const n=parseFloat(i.value);if(!isNaN(n))rates[i.dataset.k]=n});
+  const c={id:'custom-'+Date.now(),custom:true,name,bank,net:'CARD',type:'Custom',join:0,fee:0,waiver:0,minInc:0,minScore:0,rates,caps:[],forex:isNaN(fx)?3.5:fx,lounge:0,feats:['Custom card added by you'],g:'linear-gradient(135deg,#4A4E5A,#8A8F9C)'};
+  CUSTOM.push(c); CARDS.push(c); saveCustom(); W.push(c.id); saveW(); closeModal(); renderMax();
+}
+
 function toggleW(id){ W=W.includes(id)?W.filter(x=>x!==id):[...W,id]; saveW(); renderMax(); }
 
 function renderSwipe(b){
   const m=MERCHANTS[MX.merch], amt=MX.amt||0;
   const ranked=W.map(card).map(c=>({c,r:rateAt(c,m)})).sort((a,b)=>b.r-a.r);
-  const bestMarket=CARDS.filter(c=>!W.includes(c.id)).map(c=>({c,r:rateAt(c,m)})).sort((a,b)=>b.r-a.r)[0];
+  const bestMarket=MARKET().filter(c=>!W.includes(c.id)).map(c=>({c,r:rateAt(c,m)})).sort((a,b)=>b.r-a.r)[0];
   const top=ranked[0];
   const note=(c,r)=>{ const caps=capFor(c,m.c); const bits=[];
     if(r<=0 && m.c!=='intl') bits.push('No rewards on this spend');
@@ -1033,7 +1140,7 @@ function renderPlan(b){
   const opt=optimise(W);
   const singles=W.map(id=>({c:card(id),v:singleCard(id)})).sort((a,b)=>b.v-a.v);
   const bestSingle=singles[0];
-  const ups=CARDS.filter(c=>!W.includes(c.id)).map(c=>{const t=optimise([...W,c.id]).total*12;const fee=(c.fee===0||(c.waiver&&totalSpend()*12>=c.waiver))?0:c.fee*1.18;return {c,gain:t-opt.total*12-fee,fee}}).sort((a,b)=>b.gain-a.gain);
+  const ups=MARKET().filter(c=>!W.includes(c.id)).map(c=>{const t=optimise([...W,c.id]).total*12;const fee=(c.fee===0||(c.waiver&&totalSpend()*12>=c.waiver))?0:c.fee*1.18;return {c,gain:t-opt.total*12-fee,fee}}).sort((a,b)=>b.gain-a.gain);
   const up=ups[0];
   const cats=CATS.filter(k=>(sp[k.k]||0)>0);
   b.innerHTML=`<div class="plan-grid fade-in"><div class="panel"><h2>Your monthly spend plan</h2><p class="sub">Tell us your monthly spends (pre-filled from the card finder). We split each category across your cards so you use the best rates first and switch cards when a reward cap is hit.</p>
@@ -1043,7 +1150,7 @@ function renderPlan(b){
    <div class="summary"><h3>Optimised rewards per year</h3><div class="big">${inr(opt.total*12)}</div><div style="color:#9EA0AE;font-size:13.5px">${inr(opt.total)} a month on ${inr(totalSpend())} spend · ${(opt.total/Math.max(1,totalSpend())*100).toFixed(2)}% overall</div>
      <div style="margin-top:16px">${singles.map(x=>`<div class="line"><span>Only ${x.c.name}</span><b>${inr(x.v*12)}/yr</b></div>`).join('')}</div>
      ${W.length>1&&bestSingle?`<div class="gain">Using the right card each time earns <b>${inr((opt.total-bestSingle.v)*12)}</b> more a year than using just your ${bestSingle.c.name}.</div>`:''}
-     ${up&&up.gain>500?`<div class="upgrade"><small>Biggest upgrade for your wallet</small><b>${up.c.bank} ${up.c.name}</b><p>Adding it would earn about <b style="display:inline;color:var(--green)">${inr(up.gain)}/yr</b> more after its ${up.fee?inr(up.fee)+' fee':'zero fee'}.</p><button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="toggleW('${up.c.id}');MX.tab='plan';renderMax()">+ Add to my wallet</button></div>`:''}
+     ${up&&up.gain>500?`<div class="upgrade"><small>Biggest upgrade for your wallet</small><b>${up.c.bank} ${up.c.name}</b><p>Adding it would earn about <b style="display:inline;color:var(--green)">${inr(up.gain)}/yr</b> more after ${up.fee?'its '+inr(up.fee)+' fee':(up.c.fee?'its fee (waived at your spend)':'— it\'s lifetime free')}.</p><button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="toggleW('${up.c.id}');MX.tab='plan';renderMax()">+ Add to my wallet</button></div>`:''}
    </div></div>`;
   b.querySelectorAll('.mini-spends input').forEach(i=>i.addEventListener('change',()=>{S.spends[i.dataset.k]=parseInt(i.value.replace(/\D/g,''))||0;S.preset=null;save();renderPlan(b)}));
 }
