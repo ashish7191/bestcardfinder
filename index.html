@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bestcardfinder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F2EC; --paper-2:#ECE7DE; --ink:#14161F; --ink-2:#3A3D4A; --muted:#71717C;
+  --line:#DCD5C9; --green:#1D6B57; --green-2:#E3F0EA; --lime:#DDF65F; --red:#B4412F; --amber:#A36A06;
+  --radius:18px; --shadow:0 1px 2px rgba(20,22,31,.06),0 8px 28px rgba(20,22,31,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.display{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.02em;line-height:1.08}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input{font:inherit;color:inherit}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:rgba(245,242,236,.88);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+nav.scrolled{border-color:var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-family:"Bricolage Grotesque";font-weight:800;font-size:20px;letter-spacing:-.03em;cursor:pointer}
+.logo-mark{width:30px;height:20px;border-radius:5px;background:var(--ink);position:relative;transform:rotate(-8deg)}
+.logo-mark::after{content:"";position:absolute;left:5px;top:6px;width:8px;height:6px;border-radius:2px;background:var(--lime)}
+.logo b{color:var(--green)}
+.nav-links{display:flex;gap:28px;align-items:center;font-size:15px;color:var(--ink-2)}
+.nav-links a{text-decoration:none}
+.nav-links a:hover{color:var(--ink)}
+@media(max-width:720px){.nav-links a{display:none}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:999px;font-weight:600;transition:transform .12s,background .2s,box-shadow .2s;white-space:nowrap}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:#000;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.btn-ghost{border:1.5px solid var(--ink);}
+.btn-ghost:hover{background:var(--ink);color:#fff}
+.btn-sm{height:38px;padding:0 16px;font-size:14px}
+.btn[disabled]{opacity:.35;pointer-events:none}
+
+/* hero */
+.hero{padding:72px 0 56px;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);background:var(--green-2);padding:6px 12px;border-radius:999px}
+.hero h1{font-size:clamp(42px,6vw,72px);font-weight:800;margin:20px 0 20px}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--lime) 62%,var(--lime) 92%,transparent 92%)}
+.hero p.lede{font-size:19px;color:var(--ink-2);max-width:520px;margin-bottom:32px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero-note{font-size:14px;color:var(--muted);margin-top:18px;display:flex;gap:18px;flex-wrap:wrap}
+.hero-note span::before{content:"✓ ";color:var(--green);font-weight:700}
+.stack{position:relative;height:380px}
+.stack .cc{position:absolute;width:300px;box-shadow:0 24px 48px rgba(20,22,31,.22)}
+.stack .cc:nth-child(1){top:20px;left:20px;transform:rotate(-12deg)}
+.stack .cc:nth-child(2){top:90px;left:90px;transform:rotate(-2deg)}
+.stack .cc:nth-child(3){top:170px;left:150px;transform:rotate(9deg)}
+.stack .tag{position:absolute;right:0;top:10px;background:#fff;border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);font-size:13px;color:var(--muted)}
+.stack .tag b{display:block;font-family:"Bricolage Grotesque";font-size:26px;color:var(--green);letter-spacing:-.02em}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:40px}.stack{height:300px;transform:scale(.85);transform-origin:left top}}
+
+/* credit card face */
+.cc{aspect-ratio:1.586;border-radius:14px;padding:16px 18px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;font-size:12px}
+.cc::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 100% 0%,rgba(255,255,255,.22),transparent 55%)}
+.cc .cc-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+.cc .cc-bank{font-weight:700;letter-spacing:.02em;font-size:13px;opacity:.95}
+.cc .cc-chip{width:30px;height:22px;border-radius:5px;background:linear-gradient(135deg,#f3d58a,#b9913b);position:relative}
+.cc .cc-name{font-family:"Bricolage Grotesque";font-weight:700;font-size:17px;position:relative;letter-spacing:-.01em;line-height:1.1}
+.cc .cc-net{position:relative;display:flex;justify-content:space-between;align-items:flex-end;opacity:.85;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+
+/* sections */
+section{padding:64px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:32px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(30px,4vw,44px);font-weight:700;max-width:620px}
+.sec-head p{color:var(--ink-2);max-width:420px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{background:#fff;border-radius:var(--radius);padding:26px;border:1px solid var(--line)}
+.step .n{font-family:"Bricolage Grotesque";font-weight:800;font-size:15px;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--lime);display:grid;place-items:center;margin-bottom:18px}
+.step h3{font-size:21px;margin-bottom:8px}
+.step p{color:var(--ink-2);font-size:15px}
+@media(max-width:800px){.steps{grid-template-columns:1fr}}
+.how-math{margin-top:18px;background:var(--ink);color:#fff;border-radius:var(--radius);padding:28px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.how-math .eq{font-family:"Bricolage Grotesque";font-size:clamp(18px,2.4vw,26px);font-weight:700;line-height:1.3}
+.how-math .eq span{color:var(--lime)}
+.how-math p{color:#C9CAD3;font-size:15px}
+@media(max-width:800px){.how-math{grid-template-columns:1fr}}
+
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cat-tile{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;text-align:left;transition:border-color .2s,transform .15s}
+.cat-tile:hover{border-color:var(--ink);transform:translateY(-2px)}
+.cat-tile .ic{font-size:24px;margin-bottom:10px}
+.cat-tile b{display:block;font-size:16px}
+.cat-tile span{font-size:13px;color:var(--muted)}
+@media(max-width:800px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+
+.faq details{border-top:1px solid var(--line);padding:18px 0}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{font-weight:600;font-size:17px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::after{content:"+";font-size:22px;line-height:1;color:var(--muted);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{color:var(--ink-2);margin-top:10px;max-width:760px}
+footer{padding:40px 0 56px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+
+/* quiz overlay */
+.view{display:none}
+.view.on{display:block}
+.quiz{min-height:calc(100vh - 64px);padding:32px 0 120px}
+.progress{display:flex;gap:8px;margin-bottom:36px}
+.progress div{flex:1;height:5px;border-radius:5px;background:var(--line);overflow:hidden;position:relative}
+.progress div i{position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.progress div.done i{transform:scaleX(1)}
+.q-meta{font-size:14px;color:var(--muted);font-weight:600;margin-bottom:10px}
+.q-title{font-size:clamp(30px,4vw,44px);font-weight:700;margin-bottom:10px}
+.q-sub{color:var(--ink-2);margin-bottom:32px;max-width:640px}
+.field{margin-bottom:30px}
+.field>label,.field>.lbl{display:block;font-weight:600;margin-bottom:12px}
+.field .hint{font-weight:400;color:var(--muted);font-size:14px;margin-left:6px}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:12px 16px;font-weight:500;transition:border-color .15s,background .15s;text-align:left}
+.opt:hover{border-color:var(--ink-2)}
+.opt.sel{border-color:var(--ink);background:var(--ink);color:#fff}
+.opt small{display:block;font-weight:400;font-size:12.5px;opacity:.7}
+.money{display:flex;align-items:center;background:#fff;border:1.5px solid var(--line);border-radius:12px;height:54px;padding:0 16px;max-width:320px;transition:border-color .15s}
+.money:focus-within{border-color:var(--ink)}
+.money span{color:var(--muted);font-weight:600;margin-right:6px}
+.money input{border:0;outline:0;background:none;font-size:20px;font-weight:600;width:100%}
+
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.chip{border:1.5px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:500;background:#fff}
+.chip:hover{border-color:var(--ink)}
+.chip.sel{background:var(--lime);border-color:var(--ink)}
+.spends{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:800px){.spends{grid-template-columns:1fr}}
+.sp{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.sp-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.sp-top .nm{display:flex;gap:10px;align-items:center;font-weight:600;font-size:15px}
+.sp-top .nm small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.sp-top .ic{font-size:20px;width:34px;height:34px;display:grid;place-items:center;background:var(--paper);border-radius:10px;flex:none}
+.sp-val{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:9px;height:36px;padding:0 10px;width:118px;flex:none}
+.sp-val:focus-within{border-color:var(--ink)}
+.sp-val span{color:var(--muted);font-size:14px;margin-right:4px}
+.sp-val input{border:0;outline:0;width:100%;font-weight:600;font-size:15px;background:none;text-align:right}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:5px;background:linear-gradient(to right,var(--ink) var(--p,0%),var(--line) var(--p,0%))}
+input[type=range]::-moz-range-track{height:5px;border-radius:5px;background:linear-gradient(to right,var(--ink) var(--p,0%),var(--line) var(--p,0%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);margin-top:-7.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--ink)}
+.total-bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:15}
+.total-bar .wrap{display:flex;justify-content:space-between;align-items:center;height:76px;gap:16px}
+.total-bar .tot{font-size:14px;color:var(--muted)}
+.total-bar .tot b{display:block;font-family:"Bricolage Grotesque";font-size:22px;color:var(--ink);letter-spacing:-.02em}
+.total-bar .acts{display:flex;gap:10px}
+
+/* loading */
+.loading{min-height:70vh;display:grid;place-items:center;text-align:center}
+.spinner-cards{position:relative;width:140px;height:90px;margin:0 auto 28px}
+.spinner-cards i{position:absolute;inset:0;border-radius:10px;animation:shuffle 1.2s infinite ease-in-out}
+.spinner-cards i:nth-child(1){background:var(--ink);animation-delay:0s}
+.spinner-cards i:nth-child(2){background:var(--green);animation-delay:.2s}
+.spinner-cards i:nth-child(3){background:var(--lime);animation-delay:.4s}
+@keyframes shuffle{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(40px) rotate(10deg)}}
+.loading p{color:var(--muted)}
+
+/* results */
+.res-head{padding:36px 0 24px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.res-head h1{font-size:clamp(32px,4.5vw,52px);font-weight:800}
+.res-head p{color:var(--ink-2);margin-top:8px}
+.profile-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.profile-pills span{font-size:13px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--ink-2)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:22px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.filters .lbl{font-size:13px;color:var(--muted);font-weight:600;margin-right:4px}
+.filters .sep{width:1px;height:22px;background:var(--line);margin:0 6px}
+
+.top{background:var(--ink);color:#fff;border-radius:24px;padding:32px;display:grid;grid-template-columns:320px 1fr;gap:36px;margin-bottom:28px;position:relative;overflow:hidden}
+.top::after{content:"";position:absolute;right:-80px;top:-80px;width:260px;height:260px;border-radius:50%;background:var(--green);opacity:.35;filter:blur(30px)}
+.top .badge{display:inline-block;background:var(--lime);color:var(--ink);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:6px;margin-bottom:14px}
+.top h2{font-size:34px;margin-bottom:6px}
+.top .bank{color:#B7B9C6}
+.top .big{display:flex;gap:30px;margin:22px 0;flex-wrap:wrap;position:relative;z-index:1}
+.top .big div small{display:block;color:#9EA0AE;font-size:13px}
+.top .big div b{font-family:"Bricolage Grotesque";font-size:36px;letter-spacing:-.03em}
+.top .big div b.pos{color:var(--lime)}
+.top .why{list-style:none;display:grid;gap:8px;position:relative;z-index:1}
+.top .why li{padding-left:24px;position:relative;color:#E2E3EA;font-size:15px}
+.top .why li::before{content:"→";position:absolute;left:0;color:var(--lime)}
+.top .acts{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;position:relative;z-index:1}
+.top .btn-ghost{border-color:#fff;color:#fff}
+.top .btn-ghost:hover{background:#fff;color:var(--ink)}
+.top .btn-lime{background:var(--lime);color:var(--ink)}
+@media(max-width:860px){.top{grid-template-columns:1fr}}
+
+.list{display:grid;gap:12px}
+.row{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:box-shadow .2s}
+.row:hover{box-shadow:var(--shadow)}
+.row-main{display:grid;grid-template-columns:44px 132px 1fr 170px 150px;gap:20px;align-items:center;padding:16px 20px}
+.rank{font-family:"Bricolage Grotesque";font-weight:800;font-size:22px;color:var(--muted)}
+.row .cc{width:132px;padding:8px 10px;border-radius:9px;font-size:8px}
+.row .cc .cc-name{font-size:10px}
+.row .cc .cc-bank{font-size:8px}
+.row .cc .cc-chip{width:18px;height:13px;border-radius:3px}
+.row .cc .cc-net{font-size:7px}
+.row h3{font-size:19px;margin-bottom:2px}
+.row .meta{font-size:13.5px;color:var(--muted)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tags span{font-size:12px;background:var(--paper);border-radius:6px;padding:3px 8px;color:var(--ink-2)}
+.tags span.g{background:var(--green-2);color:var(--green);font-weight:600}
+.tags span.w{background:#FBEFD9;color:var(--amber);font-weight:600}
+.val{text-align:right}
+.val b{display:block;font-family:"Bricolage Grotesque";font-size:26px;letter-spacing:-.02em}
+.val b.pos{color:var(--green)}
+.val b.neg{color:var(--red)}
+.val small{font-size:12.5px;color:var(--muted)}
+.row-acts{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.cmp-toggle{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;justify-content:center;height:34px;border-radius:999px;border:1.5px solid var(--line)}
+.cmp-toggle.sel{border-color:var(--green);background:var(--green-2);color:var(--green)}
+.details-btn{font-size:13.5px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.row-detail{display:none;border-top:1px solid var(--line);background:#FBFAF7;padding:22px 24px}
+.row.open .row-detail{display:block}
+.detail-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:32px}
+.detail-grid h4{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
+.bk{width:100%;border-collapse:collapse;font-size:14px}
+.bk td{padding:7px 0;border-bottom:1px dashed var(--line)}
+.bk td:last-child{text-align:right;font-weight:600;white-space:nowrap}
+.bk td.r{color:var(--muted);text-align:right;font-weight:400;width:70px}
+.bk tr.sum td{border-bottom:0;border-top:1.5px solid var(--ink);font-weight:700;padding-top:10px}
+.bk .neg{color:var(--red)}
+.bk .capped{font-size:11px;color:var(--amber);font-weight:600;margin-left:6px}
+.feats{list-style:none;display:grid;gap:8px;font-size:14px}
+.feats li{display:flex;gap:10px}
+.feats li::before{content:"•";color:var(--green);font-weight:800}
+.bar-mini{height:8px;border-radius:6px;background:var(--paper-2);overflow:hidden;margin-top:4px}
+.bar-mini i{display:block;height:100%;background:var(--green)}
+@media(max-width:860px){
+  .row-main{grid-template-columns:32px 1fr auto;grid-template-areas:"r n v" "r c a";gap:12px}
+  .row-main .rank{grid-area:r;align-self:start}
+  .row-main .cc{display:none}
+  .row-main .nm{grid-area:n}
+  .row-main .val{grid-area:v}
+  .row-main .row-acts{grid-area:a;grid-column:2/4;flex-direction:row}
+  .detail-grid{grid-template-columns:1fr}
+}
+.subhead{font-size:22px;font-weight:700;margin:40px 0 6px}
+.subnote{color:var(--muted);font-size:14px;margin-bottom:16px}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:18px;padding:36px;text-align:center;color:var(--muted)}
+
+/* compare tray */
+.tray{position:fixed;left:50%;bottom:20px;transform:translate(-50%,140%);background:var(--ink);color:#fff;border-radius:16px;padding:12px 12px 12px 20px;display:flex;align-items:center;gap:16px;z-index:30;box-shadow:0 20px 40px rgba(0,0,0,.25);transition:transform .3s;max-width:calc(100% - 32px)}
+.tray.on{transform:translate(-50%,0)}
+.tray .ts{display:flex;gap:8px;flex-wrap:wrap}
+.tray .ts span{background:#2A2D3A;border-radius:8px;padding:6px 10px;font-size:13px;display:flex;gap:8px;align-items:center}
+.tray .ts span button{color:#9EA0AE}
+.tray .btn-lime{background:var(--lime);color:var(--ink)}
+
+.modal{position:fixed;inset:0;background:rgba(20,22,31,.55);z-index:40;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+.modal.on{display:flex}
+.modal-box{background:var(--paper);border-radius:22px;max-width:980px;width:100%;padding:28px;position:relative}
+.modal-box h2{font-size:30px;margin-bottom:20px}
+.modal .x{position:absolute;right:18px;top:16px;width:38px;height:38px;border-radius:50%;background:#fff;font-size:20px}
+.cmp-table{width:100%;border-collapse:separate;border-spacing:0;font-size:14.5px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.cmp-table th,.cmp-table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp-table th{width:200px;color:var(--muted);font-weight:600;background:#FBFAF7}
+.cmp-table thead td{font-family:"Bricolage Grotesque";font-weight:700;font-size:18px}
+.cmp-table td.best{background:var(--green-2);font-weight:700;color:var(--green)}
+.cmp-table tr:last-child th,.cmp-table tr:last-child td{border-bottom:0}
+.table-scroll{overflow-x:auto}
+
+.disclaimer{font-size:13px;color:var(--muted);background:var(--paper-2);border-radius:14px;padding:16px 18px;margin-top:36px}
+.fade-in{animation:fi .4s ease both}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav id="nav"><div class="wrap nav-in">
+  <div class="logo" onclick="go('home')"><div class="logo-mark"></div>bestcard<b>finder</b></div>
+  <div class="nav-links">
+    <a href="#how" onclick="go('home')">How it works</a>
+    <a href="#faq" onclick="go('home')">FAQ</a>
+    <button class="btn btn-primary btn-sm" onclick="startQuiz()">Find my best card</button>
+  </div>
+</div></nav>
+
+<!-- HOME -->
+<main id="v-home" class="view on">
+  <div class="wrap hero">
+    <div>
+      <span class="eyebrow">● Independent · No sign-up</span>
+      <h1>Find the credit card that actually <em>pays you back.</em></h1>
+      <p class="lede">Tell us how you spend in a typical month. We run your numbers through <span class="ncards">25</span> popular Indian credit cards and rank them by how much they'd really put back in your pocket every year, after fees.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="startQuiz()">Find my best card →</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('how').scrollIntoView()">See how we score</button>
+      </div>
+      <div class="hero-note"><span>Takes 2 minutes</span><span>No PAN or phone number</span><span>No effect on credit score</span></div>
+    </div>
+    <div class="stack" id="heroStack"></div>
+  </div>
+
+  <section id="how"><div class="wrap">
+    <div class="sec-head">
+      <h2>Ranked by what you earn, not by who pays us.</h2>
+      <p>Most "best card" lists rank by features. We rank by fit: the same card can be brilliant for one person and useless for another.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Tell us about you</h3><p>Income and credit score range, so we only lead with cards you can realistically get.</p></div>
+      <div class="step"><div class="n">2</div><h3>Map your monthly spends</h3><p>Amazon, Swiggy, fuel, bills, flights. Start from a preset and fine-tune with sliders.</p></div>
+      <div class="step"><div class="n">3</div><h3>Get your ranked shortlist</h3><p>See each card's yearly value, category by category, with caps, fee waivers and forex costs counted.</p></div>
+    </div>
+    <div class="how-math">
+      <div class="eq">Net value = <span>rewards</span> + <span>perks you'll use</span> − forex markup − annual fee</div>
+      <p>Rewards respect monthly caps. Fees drop to zero when your yearly spend crosses the waiver threshold. Lounge visits count only up to the trips you actually take. GST is added on fees and forex.</p>
+    </div>
+  </div></section>
+
+  <section style="padding-top:0"><div class="wrap">
+    <div class="sec-head"><h2>Or start from what matters most</h2></div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div></section>
+
+  <section id="faq"><div class="wrap">
+    <div class="sec-head"><h2>Questions people ask</h2></div>
+    <div class="faq">
+      <details><summary>Does using bestcardfinder affect my credit score?</summary><p>No. We never ask for your PAN, phone number or any detail that could trigger a credit enquiry. Everything runs in your browser.</p></details>
+      <details><summary>How do you value reward points and miles?</summary><p>Cashback is counted at face value. Points and miles are counted at a conservative redemption value, usually what you'd get on flights or vouchers through the bank's own portal, not best-case transfer partners. Open any card's breakdown to see the effective rate we used per category.</p></details>
+      <details><summary>Why does a card with a ₹5,000 fee rank above a free one?</summary><p>Because at your spend level it earns more than the fee costs. If the ranking flips at a lower spend, try trimming your numbers and you'll see it move.</p></details>
+      <details><summary>Should I hold more than one card?</summary><p>Often, yes. A common pattern is one card for your biggest category (for example Amazon or fuel) and a flat-rate card for everything else. Your results show the top earner in each of your spend categories.</p></details>
+      <details><summary>How current is the card data?</summary><p>Rates and fees are indicative as of November 2026 and banks change them often. Always confirm the latest terms on the issuer's website before you apply.</p></details>
+    </div>
+  </div></section>
+</main>
+
+<!-- QUIZ -->
+<main id="v-quiz" class="view"><div class="wrap quiz">
+  <div class="progress" id="progress"><div><i></i></div><div><i></i></div><div><i></i></div></div>
+  <div id="qBody"></div>
+</div>
+<div class="total-bar" id="qBar"><div class="wrap">
+  <div class="tot" id="qTot"></div>
+  <div class="acts"><button class="btn btn-ghost btn-sm" id="qBack">Back</button><button class="btn btn-primary btn-sm" id="qNext">Continue</button></div>
+</div></div>
+</main>
+
+<!-- LOADING -->
+<main id="v-load" class="view"><div class="loading"><div><div class="spinner-cards"><i></i><i></i><i></i></div><h2 style="font-size:28px;margin-bottom:8px">Running your numbers</h2><p id="loadMsg">Checking <span class="ncards">25</span> cards against your spends…</p></div></div></main>
+
+<!-- RESULTS -->
+<main id="v-res" class="view"><div class="wrap" id="resWrap"></div></main>
+
+<div class="tray" id="tray"><div class="ts" id="trayList"></div><button class="btn btn-lime btn-sm" onclick="openCompare()">Compare</button></div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal-box"><button class="x" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
+
+<footer><div class="wrap"><div><b style="color:var(--ink)">bestcardfinder</b> · An independent comparison tool. Not affiliated with any bank.</div><div>Card data is indicative (Nov 2026). Verify terms with the issuer before applying.</div></div></footer>
+
+<script>
+/* ---------- Spend categories ---------- */
+const CATS = [
+  {k:'amazon',  ic:'📦', nm:'Amazon',               sub:'Shopping, Prime, Amazon Pay'},
+  {k:'flipkart',ic:'🛍️', nm:'Flipkart & Myntra',    sub:'Fashion, electronics'},
+  {k:'online',  ic:'💻', nm:'Other online shopping', sub:'Nykaa, Ajio, apps, subscriptions'},
+  {k:'food',    ic:'🍔', nm:'Food delivery',         sub:'Swiggy, Zomato'},
+  {k:'grocery', ic:'🥬', nm:'Groceries',             sub:'BigBasket, Blinkit, supermarkets'},
+  {k:'dining',  ic:'🍽️', nm:'Dining out & movies',   sub:'Restaurants, cafés, cinemas'},
+  {k:'fuel',    ic:'⛽', nm:'Fuel',                  sub:'Petrol & diesel pumps'},
+  {k:'travel',  ic:'✈️', nm:'Travel bookings',       sub:'Flights, hotels, trains'},
+  {k:'bills',   ic:'💡', nm:'Bills & recharges',     sub:'Electricity, mobile, broadband'},
+  {k:'intl',    ic:'🌍', nm:'International spends',  sub:'Abroad or foreign websites'},
+  {k:'offline', ic:'🏬', nm:'Everything else',       sub:'Stores, pharmacy, local shops'}
+];
+const CATNAME = Object.fromEntries(CATS.map(c=>[c.k,c.nm]));
+
+/* ---------- Card catalogue (indicative, Nov 2026) ----------
+ rates: effective % value back per ₹ spent, per category
+ caps:  [{cats:[...] | 'all', m: max ₹ value per month}]
+ fee: renewal fee ₹ (excl GST); join: joining fee; waiver: annual spend that waives renewal fee
+ minInc: approx. monthly income needed; minScore: 0=any,1=650+,2=700+,3=750+
+*/
+const CARDS = [
+ {id:'sbi-cashback',name:'Cashback Credit Card',bank:'SBI Card',net:'VISA',type:'Cashback',join:999,fee:999,waiver:200000,minInc:25000,minScore:2,
+  rates:{amazon:5,flipkart:5,online:5,food:5,grocery:1,dining:1,fuel:1,travel:5,bills:0,intl:5,offline:1},
+  caps:[{cats:'all',m:5000}],forex:3.5,lounge:0,
+  feats:['5% cashback on almost all online spends, no merchant restrictions','1% on offline spends','Cashback auto-credited to statement','Utilities, rent, fuel, wallet loads earn no cashback'],
+  g:'linear-gradient(135deg,#0E3A5B,#1F6E99)'},
+ {id:'amazon-icici',name:'Amazon Pay ICICI',bank:'ICICI Bank',net:'VISA',type:'Cashback',join:0,fee:0,waiver:0,minInc:20000,minScore:1,
+  rates:{amazon:5,flipkart:1,online:1,food:1,grocery:1,dining:1,fuel:1,travel:1,bills:2,intl:1,offline:1},
+  caps:[],forex:1.99,lounge:0,
+  feats:['Lifetime free','5% back on Amazon for Prime members (3% otherwise)','2% on Amazon Pay partner merchants and bill pay','No cap on cashback'],
+  g:'linear-gradient(135deg,#1B1B1B,#3E3E3E)'},
+ {id:'flipkart-axis',name:'Flipkart Axis Bank',bank:'Axis Bank',net:'VISA',type:'Cashback',join:500,fee:500,waiver:350000,minInc:15000,minScore:1,
+  rates:{amazon:1,flipkart:5,online:1,food:4,grocery:1,dining:4,fuel:1,travel:4,bills:0,intl:1,offline:1},
+  caps:[{cats:['flipkart'],m:4000},{cats:['food','dining','travel'],m:4000}],forex:3.5,lounge:0,
+  feats:['5% on Flipkart and 7.5% on Myntra','4% on Swiggy, Uber, PVR, Cleartrip','1% everywhere else','Utilities and fuel excluded'],
+  g:'linear-gradient(135deg,#2655C4,#4C86F2)'},
+ {id:'axis-ace',name:'ACE',bank:'Axis Bank',net:'VISA',type:'Cashback',join:499,fee:499,waiver:200000,minInc:15000,minScore:1,
+  rates:{amazon:1.5,flipkart:1.5,online:1.5,food:4,grocery:1.5,dining:1.5,fuel:0,travel:1.5,bills:5,intl:1.5,offline:1.5},
+  caps:[{cats:['bills','food'],m:500}],forex:3.5,lounge:4,
+  feats:['5% on bills and recharges paid via Google Pay','4% on Swiggy, Zomato and Ola','1.5% unlimited flat cashback on everything else','Fuel, rent and wallet loads excluded'],
+  g:'linear-gradient(135deg,#5E0B2E,#97144D)'},
+ {id:'axis-magnus',name:'Magnus',bank:'Axis Bank',net:'VISA',type:'Points',join:12500,fee:12500,waiver:2500000,minInc:200000,minScore:3,
+  rates:{amazon:2.4,flipkart:2.4,online:2.4,food:2.4,grocery:2.4,dining:2.4,fuel:0,travel:12,bills:0,intl:2.4,offline:2.4},
+  caps:[{cats:['travel'],m:2400}],forex:2,lounge:99,
+  feats:['12 EDGE Reward points per ₹200, transferable to airline and hotel partners','5X on travel booked via Travel EDGE','Unlimited domestic and international lounge access','2% forex markup; fee waived at ₹25L yearly spend'],
+  g:'linear-gradient(135deg,#2A0A16,#6E1235)'},
+ {id:'axis-myzone',name:'MY Zone',bank:'Axis Bank',net:'VISA',type:'Points',join:500,fee:500,waiver:0,minInc:15000,minScore:1,
+  rates:{amazon:.4,flipkart:.4,online:.4,food:10,grocery:.4,dining:10,fuel:1,travel:.4,bills:.4,intl:.4,offline:.4},
+  caps:[{cats:['food'],m:240},{cats:['dining'],m:200}],forex:3.5,lounge:4,
+  feats:['₹120 off on Swiggy twice a month (min order ₹500)','Buy-one-get-one movie tickets, up to ₹200 a month','4 domestic lounge visits a year','Low base rewards (≈0.4%) outside these offers'],
+  g:'linear-gradient(135deg,#7B1347,#C2185B)'},
+ {id:'indianoil-axis',name:'IndianOil Axis Bank',bank:'Axis Bank',net:'RUPAY',type:'Points',join:500,fee:500,waiver:350000,minInc:15000,minScore:1,
+  rates:{amazon:1,flipkart:1,online:1,food:.2,grocery:.2,dining:.2,fuel:5,travel:.2,bills:.2,intl:.2,offline:.2},
+  caps:[{cats:['fuel'],m:250}],forex:3.5,lounge:0,
+  feats:['4% value back at IndianOil pumps + 1% surcharge waiver','1% on online shopping','Points redeem for fuel and vouchers','Very low rewards on other offline spends'],
+  g:'linear-gradient(135deg,#97144D,#F05A28)'},
+ {id:'myntra-kotak',name:'Myntra Kotak',bank:'Kotak Mahindra Bank',net:'MASTERCARD',type:'Cashback',join:500,fee:500,waiver:200000,minInc:25000,minScore:1,
+  rates:{amazon:1.25,flipkart:7.5,online:1.25,food:5,grocery:5,dining:5,fuel:0,travel:5,bills:1.25,intl:1.25,offline:1.25},
+  caps:[{cats:['flipkart'],m:750},{cats:['food','grocery','dining','travel'],m:1000}],forex:3.5,lounge:0,
+  feats:['7.5% instant discount on Myntra (up to ₹750 a month)','5% on Swiggy, Instamart, PVR, Cleartrip, Urban Company','1.25% unlimited on everything else','Free Myntra Insider membership'],
+  g:'linear-gradient(135deg,#C2185B,#FF3F6C)'},
+ {id:'kotak-league',name:'League Platinum',bank:'Kotak Mahindra Bank',net:'VISA',type:'Points',join:499,fee:499,waiver:50000,minInc:25000,minScore:1,
+  rates:{amazon:1,flipkart:1,online:1,food:1,grocery:1,dining:1,fuel:1,travel:1,bills:1,intl:1,offline:1},
+  caps:[],forex:3.5,lounge:0,
+  feats:['8 reward points per ₹150 on all spends','Bonus points on ₹1.25L spend every 6 months','Fee waived at just ₹50,000 yearly spend','Railway lounge access and fuel surcharge waiver'],
+  g:'linear-gradient(135deg,#00224F,#003874)'},
+ {id:'kotak-zen',name:'Zen Signature',bank:'Kotak Mahindra Bank',net:'VISA',type:'Points',join:1500,fee:1500,waiver:150000,minInc:50000,minScore:2,
+  rates:{amazon:.67,flipkart:1.33,online:1.33,food:.67,grocery:.67,dining:.67,fuel:1,travel:.67,bills:.67,intl:.67,offline:1.33},
+  caps:[],forex:3.5,lounge:8,
+  feats:['10 reward points per ₹150 on apparel, jewellery and department stores','5 points per ₹150 on other spends','8 domestic lounge visits a year','Milestone bonus points on ₹1L+ yearly spend'],
+  g:'linear-gradient(135deg,#1B1B2F,#4A4E69)'},
+ {id:'kotak-white',name:'White',bank:'Kotak Mahindra Bank',net:'VISA',type:'Points',join:3000,fee:3000,waiver:500000,minInc:125000,minScore:3,
+  rates:{amazon:2,flipkart:2,online:2,food:2,grocery:2,dining:2,fuel:0,travel:2,bills:1,intl:2,offline:2},
+  caps:[],forex:2,lounge:8,
+  feats:['Up to 2% value back as White Pass points, milestone-based','Redeem for brand vouchers or partner memberships','Domestic and international lounge access','Fee waived at ₹5L yearly spend'],
+  g:'linear-gradient(135deg,#B8B8B8,#6E6E78)'},
+ {id:'kotak-indigo-xl',name:'IndiGo 6E Rewards XL',bank:'Kotak Mahindra Bank',net:'MASTERCARD',type:'Miles',join:2500,fee:2500,waiver:0,minInc:75000,minScore:2,
+  rates:{amazon:1.5,flipkart:1.5,online:1.5,food:3,grocery:3,dining:3,fuel:0,travel:6,bills:1.5,intl:1.5,offline:1.5},
+  caps:[],forex:3.5,lounge:8,
+  feats:['6% back as 6E Rewards on IndiGo bookings','3% on dining, groceries and entertainment','1.5% on other spends','Complimentary IndiGo air ticket voucher on joining'],
+  g:'linear-gradient(135deg,#001B94,#2E4BD8)'},
+ {id:'kotak-811',name:'811 #DreamDifferent',bank:'Kotak Mahindra Bank',net:'VISA',type:'Points',join:0,fee:0,waiver:0,minInc:0,minScore:0,
+  rates:{amazon:.5,flipkart:.5,online:.5,food:.5,grocery:.25,dining:.25,fuel:1,travel:.5,bills:.25,intl:.25,offline:.25},
+  caps:[],forex:3.5,lounge:0,
+  feats:['Secured card against a Kotak fixed deposit, no income proof needed','Lifetime free','Builds credit history for first-time users and students','Low rewards: 2 points per ₹100 online, 1 offline'],
+  g:'linear-gradient(135deg,#ED1C24,#7A0E12)'},
+ {id:'hdfc-millennia',name:'Millennia',bank:'HDFC Bank',net:'MASTERCARD',type:'Cashback',join:1000,fee:1000,waiver:100000,minInc:35000,minScore:2,
+  rates:{amazon:5,flipkart:5,online:5,food:5,grocery:1,dining:1,fuel:1,travel:1,bills:1,intl:1,offline:1},
+  caps:[{cats:['amazon','flipkart','online','food'],m:1000},{cats:['grocery','dining','travel','bills','intl','offline'],m:1000}],forex:3.5,lounge:8,
+  feats:['5% on Amazon, Flipkart, Myntra, Swiggy, Zomato and other partners','1% on other spends','Up to 8 domestic lounge visits a year (spend-linked)','5% bucket capped at ₹1,000 a month'],
+  g:'linear-gradient(135deg,#3A1C71,#7A3FB0)'},
+ {id:'axis-airtel',name:'Airtel Axis Bank',bank:'Axis Bank',net:'MASTERCARD',type:'Cashback',join:500,fee:500,waiver:200000,minInc:15000,minScore:1,
+  rates:{amazon:1,flipkart:1,online:1,food:10,grocery:10,dining:1,fuel:1,travel:1,bills:10,intl:1,offline:1},
+  caps:[{cats:['food','grocery'],m:500},{cats:['bills'],m:550}],forex:3.5,lounge:4,
+  feats:['25% on Airtel bills via Airtel Thanks app','10% on Swiggy, Zomato and BigBasket','10% on utility bills via Airtel Thanks','4 domestic lounge visits a year'],
+  g:'linear-gradient(135deg,#B3121D,#E8414A)'},
+ {id:'hdfc-swiggy',name:'Swiggy HDFC Bank',bank:'HDFC Bank',net:'MASTERCARD',type:'Cashback',join:500,fee:500,waiver:200000,minInc:15000,minScore:1,
+  rates:{amazon:5,flipkart:5,online:5,food:10,grocery:5,dining:5,fuel:0,travel:5,bills:0,intl:5,offline:1},
+  caps:[{cats:['food','grocery','dining'],m:1500},{cats:['amazon','flipkart','online','travel','intl'],m:1500},{cats:['offline'],m:500}],forex:3.5,lounge:0,
+  feats:['10% on Swiggy food, Instamart and Dineout','5% on most online spends','1% on everything else','Cashback credited as Swiggy Money / statement credit'],
+  g:'linear-gradient(135deg,#E8590C,#FF8A3D)'},
+ {id:'tata-neu-infinity',name:'Tata Neu Infinity',bank:'HDFC Bank',net:'RUPAY',type:'Points',join:1499,fee:1499,waiver:300000,minInc:100000,minScore:2,
+  rates:{amazon:1.5,flipkart:1.5,online:1.5,food:1.5,grocery:5,dining:1.5,fuel:1,travel:1.5,bills:1.5,intl:1.5,offline:1.5},
+  caps:[],forex:2,lounge:8,
+  feats:['5% NeuCoins on Tata brands (BigBasket, Croma, Tata CLiQ, Air India)','1.5% on all other spends, including UPI on RuPay','8 domestic and 4 international lounge visits','Low 2% forex markup'],
+  g:'linear-gradient(135deg,#2A1A5E,#5B3FA8)'},
+ {id:'hdfc-regalia-gold',name:'Regalia Gold',bank:'HDFC Bank',net:'VISA',type:'Points',join:2500,fee:2500,waiver:400000,minInc:100000,minScore:3,
+  rates:{amazon:1.33,flipkart:1.33,online:2,food:1.33,grocery:1.33,dining:1.33,fuel:1,travel:4,bills:1.33,intl:1.33,offline:1.33},
+  caps:[],forex:2,lounge:12,
+  feats:['4 reward points per ₹150, 5X on Myntra, Nykaa, Reliance Digital','Up to 5X on flights and hotels via SmartBuy','12 complimentary lounge visits a year','Milestone vouchers at ₹1.5L and ₹5L quarterly/annual spend'],
+  g:'linear-gradient(135deg,#5C4511,#B89140)'},
+ {id:'axis-atlas',name:'Atlas',bank:'Axis Bank',net:'VISA',type:'Miles',join:5000,fee:5000,waiver:0,minInc:125000,minScore:3,
+  rates:{amazon:2,flipkart:2,online:2,food:2,grocery:2,dining:2,fuel:0,travel:5,bills:0,intl:2,offline:2},
+  caps:[],forex:3.5,lounge:8,
+  feats:['5 EDGE Miles per ₹100 on travel, 2 per ₹100 elsewhere','Miles transfer to airline and hotel partners','Milestone bonus miles at ₹3L, ₹7.5L, ₹15L yearly spend','Tier-based domestic and international lounge access'],
+  g:'linear-gradient(135deg,#0B2E2A,#1E6B5E)'},
+ {id:'hdfc-infinia',name:'Infinia Metal',bank:'HDFC Bank',net:'VISA',type:'Points',join:12500,fee:12500,waiver:1000000,minInc:300000,minScore:3,
+  rates:{amazon:3.3,flipkart:3.3,online:3.3,food:3.3,grocery:3.3,dining:3.3,fuel:1,travel:10,bills:3.3,intl:3.3,offline:3.3},
+  caps:[{cats:['travel'],m:15000}],forex:2,lounge:99,
+  feats:['3.3% base reward rate, up to 10X via SmartBuy','Unlimited lounge access worldwide for primary and add-on','Golf, concierge and hotel benefits','Usually invite-only for high-income customers'],
+  g:'linear-gradient(135deg,#0A0A0A,#2F3138)'},
+ {id:'sbi-octane',name:'BPCL SBI Card Octane',bank:'SBI Card',net:'VISA',type:'Points',join:1499,fee:1499,waiver:200000,minInc:30000,minScore:2,
+  rates:{amazon:.25,flipkart:.25,online:.25,food:.25,grocery:2.5,dining:2.5,fuel:7.25,travel:.25,bills:.25,intl:.25,offline:.25},
+  caps:[{cats:['fuel'],m:625}],forex:3.5,lounge:4,
+  feats:['7.25% value back at BPCL pumps (incl. surcharge waiver)','2.5% on dining, movies, groceries and departmental stores','4 domestic lounge visits a year','Weak on everything else'],
+  g:'linear-gradient(135deg,#0E4C2F,#F3C318)'},
+ {id:'indianoil-hdfc',name:'IndianOil HDFC Bank',bank:'HDFC Bank',net:'RUPAY',type:'Points',join:500,fee:500,waiver:50000,minInc:15000,minScore:1,
+  rates:{amazon:.67,flipkart:.67,online:.67,food:.67,grocery:5,dining:.67,fuel:5,travel:.67,bills:5,intl:.67,offline:.67},
+  caps:[{cats:['fuel'],m:250},{cats:['grocery'],m:100},{cats:['bills'],m:100}],forex:3.5,lounge:0,
+  feats:['5% as Fuel Points at IndianOil outlets','5% on groceries and bill payments (capped)','Fee waived at just ₹50,000 yearly spend','Points redeem for free fuel'],
+  g:'linear-gradient(135deg,#F05A28,#163E8C)'},
+ {id:'scapia-federal',name:'Scapia Federal Bank',bank:'Federal Bank',net:'VISA',type:'Points',join:0,fee:0,waiver:0,minInc:20000,minScore:1,
+  rates:{amazon:2,flipkart:2,online:2,food:2,grocery:2,dining:2,fuel:0,travel:4,bills:2,intl:2,offline:2},
+  caps:[],forex:0,lounge:12,
+  feats:['Lifetime free with zero forex markup','10% Scapia Coins on all spends (≈2% on travel redemption)','20% coins on travel booked via the Scapia app','Domestic lounge access with monthly spend condition'],
+  g:'linear-gradient(135deg,#1F0B4A,#C04A8E)'},
+ {id:'hsbc-liveplus',name:'Live+',bank:'HSBC',net:'MASTERCARD',type:'Cashback',join:999,fee:999,waiver:200000,minInc:33000,minScore:2,
+  rates:{amazon:1.5,flipkart:1.5,online:1.5,food:10,grocery:10,dining:10,fuel:0,travel:1.5,bills:1.5,intl:1.5,offline:1.5},
+  caps:[{cats:['food','grocery','dining'],m:1000}],forex:3.5,lounge:4,
+  feats:['10% on dining, food delivery and groceries (₹1,000/month cap)','1.5% unlimited on everything else','4 domestic lounge visits a year','Good all-rounder for city spenders'],
+  g:'linear-gradient(135deg,#6B0F1A,#DB0011)'},
+ {id:'idfc-millennia',name:'FIRST Millennia',bank:'IDFC FIRST Bank',net:'VISA',type:'Points',join:0,fee:0,waiver:0,minInc:20000,minScore:1,
+  rates:{amazon:1.25,flipkart:1.25,online:1.25,food:1.25,grocery:1.25,dining:1.25,fuel:1,travel:1.25,bills:.5,intl:1.25,offline:.75},
+  caps:[],forex:3.5,lounge:4,
+  feats:['Lifetime free with never-expiring reward points','10X points on incremental spends above ₹20,000 a month','1% fuel surcharge waiver','Easy approval for first-time card holders'],
+  g:'linear-gradient(135deg,#7A1530,#B2283F)'}
+];
+
+const PRESETS = {
+  'Balanced':   {amazon:3000,flipkart:2000,online:2000,food:3000,grocery:6000,dining:3000,fuel:4000,travel:2000,bills:3500,intl:0,offline:6000},
+  'Online shopper':{amazon:8000,flipkart:6000,online:5000,food:3000,grocery:4000,dining:2000,fuel:2000,travel:1000,bills:3000,intl:0,offline:3000},
+  'Foodie':     {amazon:2000,flipkart:1000,online:1000,food:8000,grocery:8000,dining:7000,fuel:2000,travel:1000,bills:3000,intl:0,offline:4000},
+  'Commuter':   {amazon:2000,flipkart:1000,online:1000,food:2000,grocery:5000,dining:2000,fuel:12000,travel:1000,bills:3000,intl:0,offline:5000},
+  'Frequent flyer':{amazon:4000,flipkart:2000,online:3000,food:4000,grocery:6000,dining:8000,fuel:3000,travel:20000,bills:4000,intl:10000,offline:10000},
+  'Clear all':  Object.fromEntries(CATS.map(c=>[c.k,0]))
+};
+
+/* ---------- State ---------- */
+const DEF = {income:60000, emp:'salaried', score:2, spends:{...PRESETS['Balanced']}, preset:'Balanced', feeMax:'any', flights:2, intlTrips:0, reward:'any'};
+let S = load() || JSON.parse(JSON.stringify(DEF));
+let step = 0;
+let compare = [];
+let filt = {feeMax:null, type:'all', bank:'all'};
+function save(){try{localStorage.setItem('bcf-answers',JSON.stringify(S))}catch(e){}}
+function load(){try{const v=localStorage.getItem('bcf-answers');return v?JSON.parse(v):null}catch(e){return null}}
+
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const sgn = n => (n<0?'−':'') + inr(Math.abs(n));
+
+/* ---------- Views ---------- */
+function go(v){
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
+  document.getElementById('v-'+v).classList.add('on');
+  document.getElementById('tray').classList.toggle('on', v==='res' && compare.length>0);
+  if(v!=='home') window.scrollTo(0,0);
+}
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>8));
+
+function cardFace(c){
+  return `<div class="cc" style="background:${c.g}"><div class="cc-top"><div class="cc-bank">${c.bank}</div><div class="cc-chip"></div></div><div class="cc-name">${c.name}</div><div class="cc-net"><span>•••• 2026</span><span>${c.net}</span></div></div>`;
+}
+
+/* ---------- Home ---------- */
+(function initHome(){
+  const pick=['scapia-federal','sbi-cashback','hdfc-regalia-gold'].map(id=>CARDS.find(c=>c.id===id));
+  document.getElementById('heroStack').innerHTML = pick.map(cardFace).join('') + `<div class="tag">Avg. difference between<br>best and 5th-best card<b>₹9,400/yr</b></div>`;
+  const tiles=[['Online shopping','📦','Online shopper'],['Food & dining','🍔','Foodie'],['Fuel','⛽','Commuter'],['Travel & lounges','✈️','Frequent flyer']];
+  document.getElementById('catGrid').innerHTML = tiles.map(([t,ic,p])=>`<button class="cat-tile" onclick="startQuiz('${p}')"><div class="ic">${ic}</div><b>${t}</b><span>Start with the ${p.toLowerCase()} preset →</span></button>`).join('');
+})();
+
+function startQuiz(preset){
+  if(preset){S.spends={...PRESETS[preset]};S.preset=preset}
+  step=0; go('quiz'); renderStep();
+}
+
+/* ---------- Quiz ---------- */
+function opt(group,val,label,sub){
+  const sel = String(S[group])===String(val);
+  return `<button class="opt ${sel?'sel':''}" onclick="setOpt('${group}','${val}')">${label}${sub?`<small>${sub}</small>`:''}</button>`;
+}
+function setOpt(g,v){S[g]= isNaN(v)||v===''?v:Number(v); save(); renderStep(true)}
+
+function renderStep(keepScroll){
+  const y=scrollY;
+  document.querySelectorAll('#progress div').forEach((d,i)=>d.classList.toggle('done',i<=step));
+  const b=document.getElementById('qBody');
+  const back=document.getElementById('qBack'), next=document.getElementById('qNext');
+  back.onclick=()=>{ if(step===0) go('home'); else {step--; renderStep()} };
+  next.onclick=()=>{ if(step<2){step++; renderStep()} else runResults() };
+  next.textContent = step<2 ? 'Continue' : 'Show my best cards →';
+
+  if(step===0){
+    b.innerHTML=`<div class="fade-in">
+      <div class="q-meta">Step 1 of 3 · About you</div>
+      <h1 class="q-title">First, a little about you</h1>
+      <p class="q-sub">Banks set minimum income and credit score requirements. We use this only to separate cards you're likely to get from stretch picks.</p>
+      <div class="field"><label for="inc">Monthly take-home income</label>
+        <div class="money"><span>₹</span><input id="inc" inputmode="numeric" value="${S.income.toLocaleString('en-IN')}"></div></div>
+      <div class="field"><div class="lbl">Employment</div><div class="opts">
+        ${opt('emp','salaried','Salaried')}${opt('emp','self','Self-employed')}${opt('emp','student','Student / no income proof')}</div></div>
+      <div class="field"><div class="lbl">Credit score (CIBIL) <span class="hint">a rough range is fine</span></div><div class="opts">
+        ${opt('score',3,'750+','Excellent')}${opt('score',2,'700–749','Good')}${opt('score',1,'650–699','Fair')}${opt('score',0,'Below 650 / not sure','New to credit')}</div></div>
+    </div>`;
+    const inc=document.getElementById('inc');
+    inc.addEventListener('input',()=>{const n=parseInt(inc.value.replace(/\D/g,''))||0;S.income=n;inc.value=n?n.toLocaleString('en-IN'):'';save();updTot()});
+  }
+  if(step===1){
+    b.innerHTML=`<div class="fade-in">
+      <div class="q-meta">Step 2 of 3 · Monthly spends</div>
+      <h1 class="q-title">Where does your money go each month?</h1>
+      <p class="q-sub">Pick the preset closest to you, then adjust. Ballpark numbers are fine; skip rent, EMIs and anything you pay by bank transfer.</p>
+      <div class="presets">${Object.keys(PRESETS).map(p=>`<button class="chip ${S.preset===p?'sel':''}" onclick="applyPreset('${p}')">${p}</button>`).join('')}</div>
+      <div class="spends">${CATS.map(c=>{const v=S.spends[c.k]||0;return `
+        <div class="sp"><div class="sp-top"><div class="nm"><div class="ic">${c.ic}</div><div>${c.nm}<small>${c.sub}</small></div></div>
+        <div class="sp-val"><span>₹</span><input data-k="${c.k}" inputmode="numeric" value="${v.toLocaleString('en-IN')}"></div></div>
+        <input type="range" min="0" max="${c.k==='travel'||c.k==='intl'?50000:30000}" step="500" value="${v}" data-k="${c.k}" style="--p:${pct(c.k,v)}%"></div>`}).join('')}</div>
+    </div>`;
+    b.querySelectorAll('input[type=range]').forEach(r=>r.addEventListener('input',()=>{
+      const k=r.dataset.k; S.spends[k]=+r.value; S.preset=null; r.style.setProperty('--p',pct(k,+r.value)+'%');
+      b.querySelector(`.sp-val input[data-k=${k}]`).value=(+r.value).toLocaleString('en-IN'); clearPresetSel(); save(); updTot();
+    }));
+    b.querySelectorAll('.sp-val input').forEach(i=>i.addEventListener('input',()=>{
+      const k=i.dataset.k, n=parseInt(i.value.replace(/\D/g,''))||0; S.spends[k]=n; S.preset=null;
+      i.value=n?n.toLocaleString('en-IN'):''; const r=b.querySelector(`input[type=range][data-k=${k}]`); r.value=n; r.style.setProperty('--p',pct(k,n)+'%'); clearPresetSel(); save(); updTot();
+    }));
+  }
+  if(step===2){
+    b.innerHTML=`<div class="fade-in">
+      <div class="q-meta">Step 3 of 3 · Preferences</div>
+      <h1 class="q-title">A few preferences</h1>
+      <p class="q-sub">These shape perks and filters. You can change all of them on the results page.</p>
+      <div class="field"><div class="lbl">How much annual fee are you comfortable with?</div><div class="opts">
+        ${opt('feeMax','0','Only lifetime-free','₹0')}${opt('feeMax','1000','Up to ₹1,000')}${opt('feeMax','5000','Up to ₹5,000')}${opt('feeMax','any','Any fee, if it pays for itself')}</div></div>
+      <div class="field"><div class="lbl">Domestic flights you take in a year <span class="hint">round trips, for lounge value</span></div><div class="opts">
+        ${opt('flights',0,'None')}${opt('flights',2,'1–2')}${opt('flights',5,'3–6')}${opt('flights',10,'7+')}</div></div>
+      <div class="field"><div class="lbl">International trips a year</div><div class="opts">
+        ${opt('intlTrips',0,'None')}${opt('intlTrips',1,'1')}${opt('intlTrips',3,'2–3')}${opt('intlTrips',5,'4+')}</div></div>
+      <div class="field"><div class="lbl">How do you like your rewards?</div><div class="opts">
+        ${opt('reward','any','No preference')}${opt('reward','Cashback','Straight cashback','Simple, no redemption')}${opt('reward','Points','Points / vouchers')}${opt('reward','Miles','Air miles','Transfer to airlines')}</div></div>
+    </div>`;
+  }
+  updTot();
+  if(keepScroll) scrollTo(0,y); else scrollTo(0,0);
+}
+function pct(k,v){const max=(k==='travel'||k==='intl')?50000:30000;return Math.min(100,v/max*100)}
+function clearPresetSel(){document.querySelectorAll('.presets .chip').forEach(c=>c.classList.remove('sel'))}
+function applyPreset(p){S.spends={...PRESETS[p]};S.preset=p;save();renderStep(true)}
+function totalSpend(){return Object.values(S.spends).reduce((a,b)=>a+(+b||0),0)}
+function updTot(){
+  const t=totalSpend();
+  document.getElementById('qTot').innerHTML = step===0 ? `Monthly income<b>${inr(S.income)}</b>` : `Your monthly card spend<b>${inr(t)} <span style="font-size:14px;color:var(--muted);font-family:DM Sans">· ${inr(t*12)}/yr</span></b>`;
+  document.getElementById('qNext').disabled = step===1 && t===0;
+}
+
+/* ---------- Scoring ---------- */
+function score(c){
+  const sp=S.spends, monthly={};
+  CATS.forEach(cat=>monthly[cat.k]=(sp[cat.k]||0)*(c.rates[cat.k]||0)/100);
+  const capped={};
+  c.caps.forEach(cap=>{
+    const keys = cap.cats==='all'?CATS.map(x=>x.k):cap.cats;
+    const sum = keys.reduce((a,k)=>a+monthly[k],0);
+    if(sum>cap.m){const f=cap.m/sum; keys.forEach(k=>{monthly[k]*=f; capped[k]=true})}
+  });
+  const rows = CATS.map(cat=>({k:cat.k,spend:(sp[cat.k]||0)*12,rate:c.rates[cat.k]||0,val:monthly[cat.k]*12,capped:!!capped[cat.k]})).filter(r=>r.spend>0);
+  const rewards = rows.reduce((a,r)=>a+r.val,0);
+  const forexCost = (sp.intl||0)*12*c.forex/100*1.18;
+  const loungeUse = Math.min(c.lounge, S.flights*2 + S.intlTrips*2);
+  const loungeVal = loungeUse*900;
+  const annual = totalSpend()*12;
+  const waived = c.fee===0 || (c.waiver>0 && annual>=c.waiver);
+  const feeCost = waived?0:c.fee*1.18;
+  const net = rewards + loungeVal - forexCost - feeCost;
+  const eligible = S.income>=c.minInc && S.score>=c.minScore && !(S.emp==='student' && c.minInc>20000);
+  return {c,rows,rewards,forexCost,loungeUse,loungeVal,feeCost,waived,net,eligible,annual};
+}
+function whyLines(r){
+  const out=[];
+  const top=[...r.rows].sort((a,b)=>b.val-a.val).slice(0,2).filter(x=>x.val>0);
+  top.forEach(t=>out.push(`Earns ${inr(t.val)}/yr on ${CATNAME[t.k].toLowerCase()} at ${t.rate}% back${t.capped?' (hits the monthly cap)':''}`));
+  if(r.c.fee===0) out.push('Lifetime free, so every rupee earned is profit');
+  else if(r.waived) out.push(`Your ${inr(r.annual)} yearly spend clears the ${inr(r.c.waiver)} fee waiver`);
+  else out.push(`Fee of ${inr(r.c.fee)} + GST is already counted in the net value`);
+  if(r.loungeVal>0) out.push(`${r.loungeUse} lounge visits you'll actually use, worth ≈${inr(r.loungeVal)}`);
+  if(S.spends.intl>0 && r.c.forex<=2) out.push(`Low ${r.c.forex}% forex markup saves money on international spends`);
+  return out.slice(0,4);
+}
+
+/* ---------- Results ---------- */
+function runResults(){
+  go('load');
+  const msgs=[`Checking ${CARDS.length} cards against your spends…`,'Applying monthly caps and fee waivers…','Counting lounge visits and forex costs…'];
+  let i=0; const iv=setInterval(()=>{i++; if(i<msgs.length) document.getElementById('loadMsg').textContent=msgs[i]},550);
+  filt={feeMax:S.feeMax, type:S.reward==='any'?'all':S.reward, bank:'all'};
+  setTimeout(()=>{clearInterval(iv); renderResults(); go('res')},1700);
+}
+function passFilt(r){
+  if(filt.feeMax!=='any' && r.c.fee>Number(filt.feeMax)) return false;
+  if(filt.type!=='all' && r.c.type!==filt.type) return false;
+  if(filt.bank!=='all' && r.c.bank!==filt.bank) return false;
+  return true;
+}
+function renderResults(){
+  const all = CARDS.map(score).sort((a,b)=>b.net-a.net);
+  const shown = all.filter(passFilt);
+  const elig = shown.filter(r=>r.eligible), stretch = shown.filter(r=>!r.eligible);
+  const best = elig[0];
+  const scoreLbl=['Below 650','650–699','700–749','750+'][S.score];
+  const w=document.getElementById('resWrap');
+  const catBest = CATS.filter(c=>(S.spends[c.k]||0)>0).map(c=>{
+    const b=[...CARDS].filter(x=>passFilt({c:x})).sort((a,b)=>(b.rates[c.k]||0)-(a.rates[c.k]||0))[0]; return b?{c,b}:null}).filter(Boolean);
+
+  w.innerHTML = `
+  <div class="res-head fade-in"><div>
+    <h1>Your best cards</h1>
+    <p>Ranked by estimated net value per year, after fees, at ${inr(totalSpend())}/month spend.</p>
+    <div class="profile-pills"><span>Income ${inr(S.income)}/mo</span><span>CIBIL ${scoreLbl}</span><span>${S.flights*2} domestic flights/yr</span>${S.intlTrips?`<span>${S.intlTrips} intl trip${S.intlTrips>1?'s':''}/yr</span>`:''}</div>
+  </div><button class="btn btn-ghost btn-sm" onclick="step=1;go('quiz');renderStep()">Edit my spends</button></div>
+
+  <div class="filters">
+    <span class="lbl">Annual fee</span>
+    ${[['0','Free'],['1000','≤ ₹1,000'],['5000','≤ ₹5,000'],['any','Any']].map(([v,l])=>`<button class="chip ${String(filt.feeMax)===v?'sel':''}" onclick="setFilt('feeMax','${v}')">${l}</button>`).join('')}
+    <span class="sep"></span><span class="lbl">Rewards</span>
+    ${[['all','All'],['Cashback','Cashback'],['Points','Points'],['Miles','Miles']].map(([v,l])=>`<button class="chip ${filt.type===v?'sel':''}" onclick="setFilt('type','${v}')">${l}</button>`).join('')}
+    <span class="sep"></span><span class="lbl">Bank</span>
+    ${['all',...new Set(CARDS.map(c=>c.bank))].map(v=>`<button class="chip ${filt.bank===v?'sel':''}" onclick="setFilt('bank','${v}')">${v==='all'?'All banks':v.replace(' Mahindra Bank','').replace(' Bank','')}</button>`).join('')}
+  </div>
+
+  ${best?topBlock(best):`<div class="empty">No cards match these filters at your income and credit score. Try relaxing the fee filter.</div>`}
+
+  ${elig.length>1?`<h2 class="subhead">Also great for you</h2><p class="subnote">Cards you're likely eligible for, ranked by net yearly value.</p><div class="list">${elig.slice(1).map((r,i)=>rowBlock(r,i+2)).join('')}</div>`:''}
+
+  ${catBest.length?`<h2 class="subhead">Best card for each thing you spend on</h2><p class="subnote">Holding two cards? Pair your top pick with the leader in your biggest category.</p>
+   <div class="cat-grid">${catBest.map(({c,b})=>`<div class="cat-tile" style="cursor:default"><div class="ic">${c.ic}</div><b>${b.bank} ${b.name}</b><span>${b.rates[c.k]}% back on ${c.nm.toLowerCase()}</span></div>`).join('')}</div>`:''}
+
+  ${stretch.length?`<h2 class="subhead">Stretch picks</h2><p class="subnote">Strong value at your spends, but your income or credit score may be below what the bank usually asks for.</p><div class="list">${stretch.map((r,i)=>rowBlock(r,'—')).join('')}</div>`:''}
+
+  <div class="disclaimer"><b>How to read this.</b> Values are estimates using indicative reward rates and fees as of November 2026. Points and miles are valued conservatively; lounge visits at ≈₹900 each, counted only up to your trips. Fees include 18% GST and drop to zero when your yearly spend crosses the waiver. Banks change terms often, so always confirm on the issuer's website. bestcardfinder is independent and not affiliated with any bank. This is not financial advice.</div>`;
+  updTray();
+}
+function setFilt(k,v){filt[k]=v;renderResults()}
+
+function breakdown(r){
+  return `<table class="bk">
+    ${r.rows.map(x=>`<tr><td>${CATNAME[x.k]}${x.capped?'<span class="capped">CAPPED</span>':''}<div style="font-size:12px;color:var(--muted)">${inr(x.spend)}/yr</div></td><td class="r">${x.rate}%</td><td>${inr(x.val)}</td></tr>`).join('')}
+    ${r.loungeVal?`<tr><td>Lounge access (${r.loungeUse} visits)</td><td class="r"></td><td>${inr(r.loungeVal)}</td></tr>`:''}
+    ${r.forexCost?`<tr><td>Forex markup (${r.c.forex}% + GST)</td><td class="r"></td><td class="neg">−${inr(r.forexCost)}</td></tr>`:''}
+    <tr><td>Annual fee ${r.c.fee===0?'(lifetime free)':r.waived?'(waived at your spend)':'+ GST'}</td><td class="r"></td><td class="${r.feeCost?'neg':''}">${r.feeCost?'−'+inr(r.feeCost):'₹0'}</td></tr>
+    <tr class="sum"><td>Net value per year</td><td class="r"></td><td>${sgn(r.net)}</td></tr>
+  </table>`;
+}
+function topBlock(r){
+  const c=r.c;
+  return `<div class="top fade-in">
+    <div>${cardFace(c)}<div style="margin-top:18px;font-size:13px;color:#9EA0AE;position:relative;z-index:1">Joining fee ${c.join?inr(c.join):'₹0'} · Renewal ${c.fee?inr(c.fee):'₹0'}${c.waiver?` (waived at ${inr(c.waiver)}/yr)`:''}</div></div>
+    <div style="position:relative;z-index:1">
+      <span class="badge">★ Your best card</span>
+      <h2>${c.name}</h2><div class="bank">${c.bank} · ${c.type} card</div>
+      <div class="big">
+        <div><small>Net value per year</small><b class="pos">${sgn(r.net)}</b></div>
+        <div><small>Effective return</small><b>${(r.net/Math.max(1,r.annual)*100).toFixed(1)}%</b></div>
+        <div><small>Rewards earned</small><b>${inr(r.rewards)}</b></div>
+      </div>
+      <ul class="why">${whyLines(r).map(l=>`<li>${l}</li>`).join('')}</ul>
+      <div class="acts">
+        <a class="btn btn-lime btn-sm" href="https://www.google.com/search?q=${encodeURIComponent(c.bank+' '+c.name+' credit card apply')}" target="_blank" rel="noopener">Check latest terms ↗</a>
+        <button class="btn btn-ghost btn-sm" onclick="showBreakdown('${c.id}')">See full breakdown</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleCmp('${c.id}')">${compare.includes(c.id)?'✓ In compare':'+ Compare'}</button>
+      </div>
+    </div></div>`;
+}
+function rowBlock(r,rank){
+  const c=r.c, best=r.rows.slice().sort((a,b)=>b.val-a.val)[0];
+  const tags=[];
+  if(c.fee===0) tags.push('<span class="g">Lifetime free</span>'); else if(r.waived) tags.push('<span class="g">Fee waived at your spend</span>');
+  if(c.forex<=2) tags.push(`<span>${c.forex}% forex</span>`);
+  if(c.lounge) tags.push(`<span>${c.lounge>=99?'Unlimited':c.lounge} lounge visits</span>`);
+  if(r.rows.some(x=>x.capped)) tags.push('<span class="w">Hits reward cap</span>');
+  if(!r.eligible) tags.push(`<span class="w">Usually needs ${inr(c.minInc)}+/mo income</span>`);
+  return `<div class="row" id="row-${c.id}"><div class="row-main">
+    <div class="rank">${rank}</div>${cardFace(c)}
+    <div class="nm"><h3>${c.name}</h3><div class="meta">${c.bank} · ${c.type}${best&&best.val>0?` · best on ${CATNAME[best.k].toLowerCase()}`:''}</div><div class="tags">${tags.join('')}</div></div>
+    <div class="val"><b class="${r.net>=0?'pos':'neg'}">${sgn(r.net)}</b><small>net per year · ${(r.net/Math.max(1,r.annual)*100).toFixed(1)}% return</small></div>
+    <div class="row-acts"><button class="cmp-toggle ${compare.includes(c.id)?'sel':''}" onclick="toggleCmp('${c.id}')">${compare.includes(c.id)?'✓ Comparing':'+ Compare'}</button><button class="details-btn" onclick="document.getElementById('row-${c.id}').classList.toggle('open')">Breakdown</button></div>
+  </div>
+  <div class="row-detail"><div class="detail-grid"><div><h4>Your yearly value</h4>${breakdown(r)}</div><div><h4>Key features</h4><ul class="feats">${c.feats.map(f=>`<li>${f}</li>`).join('')}</ul>
+   <div style="margin-top:16px;font-size:13px;color:var(--muted)">Joining ${c.join?inr(c.join):'₹0'} · Renewal ${c.fee?inr(c.fee):'₹0'}${c.waiver?` · waived at ${inr(c.waiver)}/yr`:''}</div>
+   <a class="btn btn-ghost btn-sm" style="margin-top:14px" href="https://www.google.com/search?q=${encodeURIComponent(c.bank+' '+c.name+' credit card')}" target="_blank" rel="noopener">Check latest terms ↗</a></div></div></div></div>`;
+}
+function showBreakdown(id){
+  const r=score(CARDS.find(c=>c.id===id));
+  document.getElementById('modalBody').innerHTML=`<h2>${r.c.name} · ${r.c.bank}</h2><div class="detail-grid"><div>${breakdown(r)}</div><div><ul class="feats">${r.c.feats.map(f=>`<li>${f}</li>`).join('')}</ul></div></div>`;
+  document.getElementById('modal').classList.add('on');
+}
+
+/* ---------- Compare ---------- */
+function toggleCmp(id){
+  if(compare.includes(id)) compare=compare.filter(x=>x!==id);
+  else { if(compare.length>=3) compare.shift(); compare.push(id); }
+  const y=scrollY; renderResults(); scrollTo(0,y);
+}
+function updTray(){
+  const t=document.getElementById('tray');
+  document.getElementById('trayList').innerHTML = compare.map(id=>{const c=CARDS.find(x=>x.id===id);return `<span>${c.name}<button onclick="toggleCmp('${id}')">×</button></span>`}).join('') + (compare.length<3?`<span style="background:none;color:#9EA0AE">Add up to ${3-compare.length} more</span>`:'');
+  t.classList.toggle('on', compare.length>0 && document.getElementById('v-res').classList.contains('on'));
+}
+function openCompare(){
+  const rs=compare.map(id=>score(CARDS.find(c=>c.id===id)));
+  const bestNet=Math.max(...rs.map(r=>r.net));
+  const cats=CATS.filter(c=>(S.spends[c.k]||0)>0);
+  const line=(label,fn,bestFn)=>`<tr><th>${label}</th>${rs.map(r=>`<td class="${bestFn&&bestFn(r)?'best':''}">${fn(r)}</td>`).join('')}</tr>`;
+  const maxRate=k=>Math.max(...rs.map(r=>r.c.rates[k]||0));
+  document.getElementById('modalBody').innerHTML=`<h2>Side by side</h2><div class="table-scroll"><table class="cmp-table">
+    <thead><tr><th></th>${rs.map(r=>`<td>${r.c.name}<div style="font-family:DM Sans;font-weight:400;font-size:13px;color:var(--muted)">${r.c.bank}</div></td>`).join('')}</tr></thead>
+    ${line('Net value / year',r=>sgn(r.net),r=>r.net===bestNet)}
+    ${line('Rewards earned',r=>inr(r.rewards))}
+    ${line('Annual fee',r=>r.c.fee?`${inr(r.c.fee)}${r.waived?' (waived for you)':''}`:'Lifetime free',r=>r.feeCost===0)}
+    ${line('Fee waiver at',r=>r.c.waiver?inr(r.c.waiver)+'/yr':'—')}
+    ${cats.map(c=>line(c.ic+' '+c.nm,r=>`${r.c.rates[c.k]||0}%`,r=>(r.c.rates[c.k]||0)===maxRate(c.k)&&maxRate(c.k)>0)).join('')}
+    ${line('Forex markup',r=>r.c.forex+'%',r=>r.c.forex===Math.min(...rs.map(x=>x.c.forex)))}
+    ${line('Lounge visits / yr',r=>r.c.lounge>=99?'Unlimited':r.c.lounge||'—')}
+    ${line('Reward type',r=>r.c.type)}
+    ${line('Likely eligible',r=>r.eligible?'Yes':'Stretch',r=>r.eligible)}
+  </table></div>`;
+  document.getElementById('modal').classList.add('on');
+}
+function closeModal(){document.getElementById('modal').classList.remove('on')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+</script>
+</body>
+</html>
