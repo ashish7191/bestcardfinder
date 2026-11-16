@@ -267,6 +267,94 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .cmp-table tr:last-child th,.cmp-table tr:last-child td{border-bottom:0}
 .table-scroll{overflow-x:auto}
 
+
+/* maximizer */
+.max-hero{padding:40px 0 8px}
+.max-hero h1{font-size:clamp(34px,5vw,56px);font-weight:800;margin:14px 0 10px}
+.max-hero p{color:var(--ink-2);max-width:640px}
+.tabs{display:flex;gap:6px;background:var(--paper-2);padding:5px;border-radius:999px;width:max-content;max-width:100%;overflow-x:auto;margin:26px 0 22px}
+.tabs button{height:40px;padding:0 18px;border-radius:999px;font-weight:600;font-size:14.5px;color:var(--ink-2);white-space:nowrap}
+.tabs button.on{background:var(--ink);color:#fff}
+.tabs button .ct{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:10px;background:var(--lime);color:var(--ink);font-size:12px;margin-left:6px;padding:0 6px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px}
+.panel h2{font-size:26px;margin-bottom:4px}
+.panel .sub{color:var(--muted);font-size:14.5px;margin-bottom:20px}
+.wallet-search{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.wallet-search input{flex:1;min-width:220px;height:44px;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;outline:0;background:var(--paper)}
+.wallet-search input:focus{border-color:var(--ink)}
+.bank-group{margin-bottom:20px}
+.bank-group h4{font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.wcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.wcard{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;text-align:left;background:#fff;transition:border-color .15s,background .15s;position:relative}
+.wcard:hover{border-color:var(--ink-2)}
+.wcard.sel{border-color:var(--green);background:var(--green-2)}
+.wcard.sel::after{content:"✓";position:absolute;right:10px;top:8px;width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:grid;place-items:center;font-weight:700}
+.wcard .sw{width:46px;height:29px;border-radius:5px;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.wcard b{font-size:14px;display:block;line-height:1.25;padding-right:18px}
+.wcard small{font-size:12px;color:var(--muted)}
+.merch{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:20px}
+.merch button{border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;text-align:left;font-size:14px;font-weight:500;background:#fff}
+.merch button:hover{border-color:var(--ink-2)}
+.merch button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.merch button span{display:block;font-size:11.5px;opacity:.65;font-weight:400}
+.swipe-row{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px}
+.rank-list{display:grid;gap:10px}
+.rk{display:grid;grid-template-columns:30px 54px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.rk.win{border:2px solid var(--green);background:var(--green-2)}
+.rk .n{font-family:"Bricolage Grotesque";font-weight:800;color:var(--muted);font-size:18px}
+.rk .sw{width:54px;height:34px;border-radius:6px}
+.rk b{display:block}
+.rk small{color:var(--muted);font-size:13px}
+.rk .earn{text-align:right}
+.rk .earn b{font-family:"Bricolage Grotesque";font-size:22px;letter-spacing:-.02em}
+.rk.win .earn b{color:var(--green)}
+.rk .earn small{display:block}
+.callout{display:flex;gap:14px;align-items:center;background:var(--ink);color:#fff;border-radius:16px;padding:16px 18px;margin-top:16px;flex-wrap:wrap}
+.callout .ic{font-size:22px}
+.callout div{flex:1;min-width:220px;font-size:14.5px;color:#D9DAE2}
+.callout b{color:var(--lime)}
+.cheat{width:100%;border-collapse:collapse;font-size:14.5px}
+.cheat th{text-align:left;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 12px 10px;font-weight:600}
+.cheat td{padding:12px;border-top:1px solid var(--line);vertical-align:middle}
+.cheat td .pill{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.cheat td .pill i{width:28px;height:18px;border-radius:4px;display:inline-block}
+.cheat td.rate{font-family:"Bricolage Grotesque";font-weight:700;font-size:18px;color:var(--green);white-space:nowrap}
+.cheat td.alt{color:var(--muted);font-size:13.5px}
+.plan-grid{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:start}
+@media(max-width:900px){.plan-grid{grid-template-columns:1fr}}
+.mini-spends{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:600px){.mini-spends{grid-template-columns:1fr}}
+.ms{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px 10px 8px 12px;font-size:14px}
+.alloc{margin-top:22px}
+.alloc-row{display:grid;grid-template-columns:1fr auto;gap:6px 16px;padding:14px 0;border-top:1px solid var(--line)}
+.alloc-row .cat{font-weight:600}
+.alloc-row .cat small{color:var(--muted);font-weight:400;margin-left:6px}
+.alloc-row .tot{font-weight:700;text-align:right}
+.alloc-row .splits{grid-column:1/3;display:grid;gap:6px}
+.split{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-2)}
+.split i{width:24px;height:15px;border-radius:3px;flex:none}
+.split .bar{flex:1;height:6px;border-radius:4px;background:var(--paper-2);overflow:hidden;min-width:40px}
+.split .bar span{display:block;height:100%;background:var(--green)}
+.split .r{white-space:nowrap}
+.summary{position:sticky;top:84px;background:var(--ink);color:#fff;border-radius:22px;padding:24px}
+.summary h3{font-size:16px;color:#B7B9C6;font-weight:500;font-family:"DM Sans"}
+.summary .big{font-family:"Bricolage Grotesque";font-size:44px;font-weight:800;letter-spacing:-.03em;color:var(--lime);margin:4px 0 2px}
+.summary .line{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid #2C2F3C;font-size:14.5px;color:#D9DAE2}
+.summary .line b{color:#fff}
+.summary .gain{background:#20232F;border-radius:12px;padding:12px 14px;margin-top:12px;font-size:14px;color:#D9DAE2}
+.summary .gain b{color:var(--lime)}
+.upgrade{margin-top:14px;background:#fff;color:var(--ink);border-radius:14px;padding:14px}
+.upgrade small{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.upgrade b{display:block;font-size:16px;margin:4px 0}
+.upgrade p{font-size:13.5px;color:var(--ink-2)}
+.max-promo{background:var(--ink);color:#fff;border-radius:26px;padding:40px;display:grid;grid-template-columns:1.2fr 1fr;gap:30px;align-items:center}
+.max-promo h2{font-size:clamp(28px,3.6vw,42px);margin:14px 0 12px}
+.max-promo p{color:#C9CAD3;margin-bottom:22px}
+.max-promo .eyebrow{background:#262938;color:var(--lime)}
+.max-promo .demo{background:#1E2130;border-radius:18px;padding:16px;display:grid;gap:8px}
+.max-promo .demo div{display:flex;justify-content:space-between;align-items:center;background:#272A3A;border-radius:10px;padding:10px 14px;font-size:14px}
+.max-promo .demo div b{color:var(--lime);font-family:"Bricolage Grotesque"}
+@media(max-width:800px){.max-promo{grid-template-columns:1fr;padding:28px}}
 .disclaimer{font-size:13px;color:var(--muted);background:var(--paper-2);border-radius:14px;padding:16px 18px;margin-top:36px}
 .fade-in{animation:fi .4s ease both}
 @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -277,6 +365,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 <nav id="nav"><div class="wrap nav-in">
   <div class="logo" onclick="go('home')"><div class="logo-mark"></div>bestcard<b>finder</b></div>
   <div class="nav-links">
+    <a href="#" onclick="event.preventDefault();openMax()">Rewards Maximizer</a>
     <a href="#how" onclick="go('home')">How it works</a>
     <a href="#faq" onclick="go('home')">FAQ</a>
     <button class="btn btn-primary btn-sm" onclick="startQuiz()">Find my best card</button>
@@ -320,6 +409,13 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     <div class="cat-grid" id="catGrid"></div>
   </div></section>
 
+  <section style="padding-top:0"><div class="wrap"><div class="max-promo">
+    <div><span class="eyebrow">New · Rewards Maximizer</span><h2>Already have cards? Swipe the right one every time.</h2>
+    <p>Add the cards in your wallet. We'll tell you which one to use at Amazon, Swiggy, the petrol pump or abroad, and plan your month so no reward cap goes to waste.</p>
+    <button class="btn" style="background:var(--lime);color:var(--ink)" onclick="openMax()">Open Rewards Maximizer →</button></div>
+    <div class="demo"><div>Amazon ₹5,000<b>Amazon Pay ICICI · ₹250</b></div><div>Swiggy ₹1,200<b>Swiggy HDFC · ₹120</b></div><div>BPCL fuel ₹3,000<b>BPCL Octane · ₹218</b></div><div>Electricity bill ₹2,400<b>Axis ACE · ₹120</b></div></div>
+  </div></div></section>
+
   <section id="faq"><div class="wrap">
     <div class="sec-head"><h2>Questions people ask</h2></div>
     <div class="faq">
@@ -342,6 +438,15 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   <div class="acts"><button class="btn btn-ghost btn-sm" id="qBack">Back</button><button class="btn btn-primary btn-sm" id="qNext">Continue</button></div>
 </div></div>
 </main>
+
+<!-- MAXIMIZER -->
+<main id="v-max" class="view"><div class="wrap" style="padding-bottom:80px">
+  <div class="max-hero"><span class="eyebrow">● Rewards Maximizer</span>
+    <h1>Get the most out of the cards you already have.</h1>
+    <p>Pick the cards in your wallet. We'll tell you which one to swipe for every purchase and plan your monthly spends around reward caps.</p></div>
+  <div class="tabs" id="maxTabs"></div>
+  <div id="maxBody"></div>
+</div></main>
 
 <!-- LOADING -->
 <main id="v-load" class="view"><div class="loading"><div><div class="spinner-cards"><i></i><i></i><i></i></div><h2 style="font-size:28px;margin-bottom:8px">Running your numbers</h2><p id="loadMsg">Checking <span class="ncards">25</span> cards against your spends…</p></div></div></main>
@@ -803,6 +908,146 @@ function openCompare(){
   </table></div>`;
   document.getElementById('modal').classList.add('on');
 }
+
+/* ================= REWARDS MAXIMIZER ================= */
+const MERCHANTS=[
+ {n:'Amazon',c:'amazon'},
+ {n:'Flipkart',c:'flipkart'},
+ {n:'Myntra',c:'flipkart',o:{'flipkart-axis':7.5,'myntra-kotak':7.5,'hdfc-regalia-gold':6.67}},
+ {n:'Nykaa',c:'online',o:{'hdfc-regalia-gold':6.67}},
+ {n:'Other online shopping',c:'online'},
+ {n:'Swiggy',c:'food',o:{'axis-myzone':10}},
+ {n:'Zomato',c:'food',o:{'hdfc-swiggy':5,'flipkart-axis':1,'myntra-kotak':1.25,'axis-myzone':.4}},
+ {n:'Swiggy Instamart',c:'grocery',o:{'hdfc-swiggy':10,'axis-airtel':1,'tata-neu-infinity':1.5}},
+ {n:'BigBasket',c:'grocery',o:{'hdfc-swiggy':1,'myntra-kotak':1.25}},
+ {n:'Blinkit / Zepto',c:'grocery',o:{'axis-airtel':1,'tata-neu-infinity':1.5,'myntra-kotak':1.25}},
+ {n:'Supermarket',c:'grocery',o:{'axis-airtel':1,'tata-neu-infinity':1.5,'myntra-kotak':1.25,'hdfc-swiggy':1}},
+ {n:'Restaurant',c:'dining',o:{'hdfc-swiggy':1,'flipkart-axis':1,'axis-myzone':.4,'myntra-kotak':1.25}},
+ {n:'Movie tickets',c:'dining'},
+ {n:'Uber / Ola',c:'travel',o:{'axis-ace':4,'kotak-indigo-xl':1.5,'hdfc-infinia':3.3,'hdfc-regalia-gold':1.33,'axis-magnus':2.4}},
+ {n:'Flights & hotels',c:'travel'},
+ {n:'IndiGo flights',c:'travel'},
+ {n:'Petrol – IndianOil',c:'fuel',o:{'sbi-octane':1}},
+ {n:'Petrol – BPCL',c:'fuel',o:{'indianoil-hdfc':1,'indianoil-axis':1}},
+ {n:'Petrol – HPCL / other',c:'fuel',o:{'sbi-octane':1,'indianoil-hdfc':1,'indianoil-axis':1}},
+ {n:'Electricity / gas bill',c:'bills'},
+ {n:'Mobile & DTH recharge',c:'bills'},
+ {n:'Croma / Tata CLiQ',c:'offline',o:{'tata-neu-infinity':5}},
+ {n:'Pharmacy & local stores',c:'offline'},
+ {n:'International / abroad',c:'intl'}
+];
+let W = (()=>{try{return JSON.parse(localStorage.getItem('bcf-wallet'))||[]}catch(e){return []}})();
+let MX = {tab:W.length?'swipe':'wallet', merch:0, amt:2000, q:''};
+const saveW=()=>{try{localStorage.setItem('bcf-wallet',JSON.stringify(W))}catch(e){}};
+const card=id=>CARDS.find(c=>c.id===id);
+
+function rateAt(c,m){ // effective % for merchant
+  let r = (m.o && m.o[c.id]!=null) ? m.o[c.id] : (c.rates[m.c]||0);
+  if(m.c==='intl') r = r - c.forex*1.18;
+  return r;
+}
+function catRate(c,k){ let r=c.rates[k]||0; if(k==='intl') r-=c.forex*1.18; return r; }
+function capFor(c,k){ return c.caps.filter(cp=>cp.cats==='all'||cp.cats.includes(k)); }
+
+function openMax(){ go('max'); renderMax(); }
+function setTab(t){ MX.tab=t; renderMax(); }
+function renderMax(){
+  const tabs=[['wallet','1 · My wallet',W.length],['swipe','2 · Which card to swipe?'],['cheat','3 · Cheat sheet'],['plan','4 · Monthly plan']];
+  document.getElementById('maxTabs').innerHTML=tabs.map(([k,l,ct])=>`<button class="${MX.tab===k?'on':''}" onclick="setTab('${k}')">${l}${ct?`<span class="ct">${ct}</span>`:''}</button>`).join('');
+  const b=document.getElementById('maxBody');
+  if(MX.tab!=='wallet' && !W.length){ b.innerHTML=`<div class="panel fade-in" style="text-align:center;padding:48px"><h2>Add your cards first</h2><p class="sub">Choose the credit cards you hold. We never ask for card numbers.</p><button class="btn btn-primary" onclick="setTab('wallet')">Select my cards</button></div>`; return; }
+  ({wallet:renderWallet,swipe:renderSwipe,cheat:renderCheat,plan:renderPlan})[MX.tab](b);
+}
+
+function renderWallet(b){
+  const q=MX.q.toLowerCase();
+  const banks=[...new Set(CARDS.map(c=>c.bank))];
+  b.innerHTML=`<div class="panel fade-in"><h2>Which cards do you hold?</h2><p class="sub">Tap to add or remove. Your wallet stays on this device.</p>
+   <div class="wallet-search"><input id="wq" placeholder="Search cards or banks…" value="${MX.q}"><button class="btn btn-primary btn-sm" ${W.length?'':'disabled'} onclick="setTab('swipe')">Done · ${W.length} card${W.length===1?'':'s'} →</button></div>
+   <div id="wgroups">${banks.map(bk=>{const cs=CARDS.filter(c=>c.bank===bk&&(!q||(c.name+' '+c.bank).toLowerCase().includes(q)));return cs.length?`<div class="bank-group"><h4>${bk}</h4><div class="wcards">${cs.map(c=>`<button class="wcard ${W.includes(c.id)?'sel':''}" onclick="toggleW('${c.id}')"><span class="sw" style="background:${c.g}"></span><span><b>${c.name}</b><small>${c.type} · ${c.fee?inr(c.fee)+'/yr':'Lifetime free'}</small></span></button>`).join('')}</div></div>`:''}).join('')}</div></div>`;
+  const wq=document.getElementById('wq'); wq.addEventListener('input',()=>{MX.q=wq.value;renderWallet(b);const n=document.getElementById('wq');n.focus();n.setSelectionRange(n.value.length,n.value.length)});
+}
+function toggleW(id){ W=W.includes(id)?W.filter(x=>x!==id):[...W,id]; saveW(); renderMax(); }
+
+function renderSwipe(b){
+  const m=MERCHANTS[MX.merch], amt=MX.amt||0;
+  const ranked=W.map(card).map(c=>({c,r:rateAt(c,m)})).sort((a,b)=>b.r-a.r);
+  const bestMarket=CARDS.filter(c=>!W.includes(c.id)).map(c=>({c,r:rateAt(c,m)})).sort((a,b)=>b.r-a.r)[0];
+  const top=ranked[0];
+  const note=(c,r)=>{ const caps=capFor(c,m.c); const bits=[];
+    if(r<=0 && m.c!=='intl') bits.push('No rewards on this spend');
+    if(m.c==='intl') bits.push(`${c.forex}% forex markup counted`);
+    if(caps.length) bits.push(`Capped at ${inr(Math.min(...caps.map(x=>x.m)))} reward/month`);
+    if(m.c==='fuel' && r>=1 && r<=1) bits.push('1% surcharge waiver only');
+    return bits.join(' · ')||`${c.type} card`; };
+  b.innerHTML=`<div class="panel fade-in"><h2>Which card should I swipe?</h2><p class="sub">Pick where you're paying and how much. We rank your ${W.length} card${W.length>1?'s':''}.</p>
+   <div class="merch">${MERCHANTS.map((x,i)=>`<button class="${i===MX.merch?'sel':''}" onclick="MX.merch=${i};renderMax()">${x.n}<span>${CATNAME[x.c]}</span></button>`).join('')}</div>
+   <div class="swipe-row"><div><div class="lbl" style="font-weight:600;margin-bottom:8px">Amount</div><div class="money"><span>₹</span><input id="samt" inputmode="numeric" value="${amt.toLocaleString('en-IN')}"></div></div></div>
+   <div class="rank-list" id="rlist">${ranked.map((x,i)=>`<div class="rk ${i===0&&x.r>0?'win':''}"><div class="n">${i+1}</div><div class="sw" style="background:${x.c.g}"></div><div><b>${x.c.bank} ${x.c.name}</b><small>${note(x.c,x.r)}</small></div><div class="earn"><b>${x.r<0?'−':''}${inr(Math.abs(amt*x.r/100))}</b><small>${x.r.toFixed(2).replace(/\.?0+$/,'')}% ${x.r<0?'net cost':'back'}</small></div></div>`).join('')}</div>
+   ${bestMarket && top && bestMarket.r>top.r+0.5?`<div class="callout"><div class="ic">💡</div><div>With <b>${bestMarket.c.bank} ${bestMarket.c.name}</b> you'd earn <b>${inr(amt*bestMarket.r/100)}</b> here (${bestMarket.r.toFixed(2).replace(/\.?0+$/,'')}%) instead of ${inr(Math.max(0,amt*top.r/100))}.</div><button class="btn btn-sm" style="background:var(--lime);color:var(--ink)" onclick="startQuiz()">Find my best card</button></div>`:''}
+  </div>`;
+  const si=document.getElementById('samt');
+  si.addEventListener('input',()=>{const n=parseInt(si.value.replace(/\D/g,''))||0;MX.amt=n;si.value=n?n.toLocaleString('en-IN'):'';
+    const pos=si.value.length; renderSwipe(b); const s2=document.getElementById('samt'); s2.focus(); s2.setSelectionRange(pos,pos);});
+}
+
+function renderCheat(b){
+  const rows=CATS.map(k=>{const r=W.map(card).map(c=>({c,r:catRate(c,k.k)})).sort((a,b)=>b.r-a.r);return {k,best:r[0],alt:r[1]}});
+  b.innerHTML=`<div class="panel fade-in"><h2>Your wallet cheat sheet</h2><p class="sub">The card to reach for in each category. Screenshot it, or keep this page bookmarked.</p>
+   <div class="table-scroll"><table class="cheat"><thead><tr><th>Spend</th><th>Use this card</th><th>Value back</th><th>Backup</th></tr></thead><tbody>
+   ${rows.map(x=>`<tr><td>${x.k.ic} ${x.k.nm}</td><td>${x.best.r>0?`<span class="pill"><i style="background:${x.best.c.g}"></i>${x.best.c.bank} ${x.best.c.name}</span>`:'<span style="color:var(--muted)">None of your cards reward this</span>'}</td><td class="rate">${x.best.r>0?x.best.r.toFixed(2).replace(/\.?0+$/,'')+'%':'—'}${capFor(x.best.c,x.k.k).length&&x.best.r>0?' <span style="font-size:11px;color:var(--amber);font-family:DM Sans">capped</span>':''}</td><td class="alt">${x.alt&&x.alt.r>0?`${x.alt.c.name} · ${x.alt.r.toFixed(2).replace(/\.?0+$/,'')}%`:'—'}</td></tr>`).join('')}
+   </tbody></table></div></div>`;
+}
+
+/* cap-aware greedy allocation */
+function optimise(ids){
+  const cs=ids.map(card), rem={};
+  cs.forEach(c=>c.caps.forEach((cp,i)=>rem[c.id+'#'+i]=cp.m));
+  const out={}, cats=CATS.filter(k=>(S.spends[k.k]||0)>0);
+  // process categories with highest achievable rate first so scarce caps go where they matter most
+  cats.sort((a,b)=>Math.max(0,...cs.map(c=>catRate(c,b.k)))-Math.max(0,...cs.map(c=>catRate(c,a.k))));
+  let total=0;
+  cats.forEach(k=>{
+    let left=S.spends[k.k]; const splits=[];
+    const order=cs.map(c=>({c,r:catRate(c,k.k)})).sort((a,b)=>b.r-a.r);
+    for(const {c,r} of order){
+      if(left<=0) break;
+      if(r<=0){ break; }
+      const keys=c.caps.map((cp,i)=>({cp,i})).filter(x=>x.cp.cats==='all'||x.cp.cats.includes(k.k)).map(x=>c.id+'#'+x.i);
+      const room = keys.length? Math.min(...keys.map(x=>rem[x])) : Infinity;
+      if(room<=0) continue;
+      const fit = room===Infinity? left : Math.min(left, room/(r/100));
+      const val=fit*r/100; keys.forEach(x=>rem[x]-=val);
+      splits.push({c,amt:fit,r,val,capped:fit<left}); left-=fit; total+=val;
+    }
+    if(left>0.5){ const fb=order[0]; splits.push({c:fb.c,amt:left,r:Math.max(0,0),val:0,leftover:true}); }
+    out[k.k]={k,splits};
+  });
+  return {out,total};
+}
+function singleCard(id){ // whole spend on one card, caps respected
+  return optimise([id]).total;
+}
+function renderPlan(b){
+  const sp=S.spends;
+  const opt=optimise(W);
+  const singles=W.map(id=>({c:card(id),v:singleCard(id)})).sort((a,b)=>b.v-a.v);
+  const bestSingle=singles[0];
+  const ups=CARDS.filter(c=>!W.includes(c.id)).map(c=>{const t=optimise([...W,c.id]).total*12;const fee=(c.fee===0||(c.waiver&&totalSpend()*12>=c.waiver))?0:c.fee*1.18;return {c,gain:t-opt.total*12-fee,fee}}).sort((a,b)=>b.gain-a.gain);
+  const up=ups[0];
+  const cats=CATS.filter(k=>(sp[k.k]||0)>0);
+  b.innerHTML=`<div class="plan-grid fade-in"><div class="panel"><h2>Your monthly spend plan</h2><p class="sub">Tell us your monthly spends (pre-filled from the card finder). We split each category across your cards so you use the best rates first and switch cards when a reward cap is hit.</p>
+     <div class="mini-spends">${CATS.map(k=>`<label class="ms"><span>${k.ic} ${k.nm}</span><span class="sp-val"><span>₹</span><input data-k="${k.k}" inputmode="numeric" value="${(sp[k.k]||0).toLocaleString('en-IN')}"></span></label>`).join('')}</div>
+     <div class="alloc">${cats.map(k=>{const a=opt.out[k.k];const tv=a.splits.reduce((s,x)=>s+x.val,0);return `<div class="alloc-row"><div class="cat">${k.ic} ${k.nm}<small>${inr(sp[k.k])}/mo</small></div><div class="tot">${inr(tv)}/mo</div><div class="splits">${a.splits.map(x=>`<div class="split"><i style="background:${x.c.g}"></i><span style="min-width:150px">${x.leftover?'<span style="color:var(--amber)">Any card · no rewards left</span>':x.c.name}</span><span class="bar"><span style="width:${x.amt/sp[k.k]*100}%"></span></span><span class="r">${inr(x.amt)}${x.leftover?'':` @ ${x.r.toFixed(2).replace(/\.?0+$/,'')}% = ${inr(x.val)}`}</span></div>`).join('')}${a.splits.some(x=>x.capped)?'<div style="font-size:12px;color:var(--amber);font-weight:600">↳ switches card after the monthly reward cap</div>':''}</div></div>`}).join('')}</div>
+   </div>
+   <div class="summary"><h3>Optimised rewards per year</h3><div class="big">${inr(opt.total*12)}</div><div style="color:#9EA0AE;font-size:13.5px">${inr(opt.total)} a month on ${inr(totalSpend())} spend · ${(opt.total/Math.max(1,totalSpend())*100).toFixed(2)}% overall</div>
+     <div style="margin-top:16px">${singles.map(x=>`<div class="line"><span>Only ${x.c.name}</span><b>${inr(x.v*12)}/yr</b></div>`).join('')}</div>
+     ${W.length>1&&bestSingle?`<div class="gain">Using the right card each time earns <b>${inr((opt.total-bestSingle.v)*12)}</b> more a year than using just your ${bestSingle.c.name}.</div>`:''}
+     ${up&&up.gain>500?`<div class="upgrade"><small>Biggest upgrade for your wallet</small><b>${up.c.bank} ${up.c.name}</b><p>Adding it would earn about <b style="display:inline;color:var(--green)">${inr(up.gain)}/yr</b> more after its ${up.fee?inr(up.fee)+' fee':'zero fee'}.</p><button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="toggleW('${up.c.id}');MX.tab='plan';renderMax()">+ Add to my wallet</button></div>`:''}
+   </div></div>`;
+  b.querySelectorAll('.mini-spends input').forEach(i=>i.addEventListener('change',()=>{S.spends[i.dataset.k]=parseInt(i.value.replace(/\D/g,''))||0;S.preset=null;save();renderPlan(b)}));
+}
+
 function closeModal(){document.getElementById('modal').classList.remove('on')}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
